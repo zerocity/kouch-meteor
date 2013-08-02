@@ -6,8 +6,83 @@
   {{> hello}}
 </body>
 
+<template name="playlist">
+		<div class="media">
+		  <a class="pull-left" href="#">
+		    <img class="media-object" style="width: 64px; height: 64px;" src="{{thumbnail}}">
+		  </a>
+		  <div class="media-body">
+		    <h4 class="media-heading">{{title}}</h4>
+		    <a class="btn button btn-primary watch" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{id}}"><span class="glyphicon glyphicon-share"></span> Queue</a>
+		    <a class="btn button btn-primary watch" data-id={{id}}><span class="glyphicon glyphicon-play"></span> Play</a>
+		    <a class="btn button btn-primary watch" data-id={{id}}><span class="glyphicon glyphicon-bookmark"></span> bookmark</a>
+		  </div>
+		</div>
+</template>
+
+
 <template name="hello">
-  <h1>Hello World!</h1>
+		<div class="container">
+			<ul class="padding-left padding-top padding-bottom nav nav-pills" data-pills="pills">
+			  <li  class="active" ><a href="#youtube" data-toggle="pill">Search</a></li>
+			  <li><a href="#playlist" data-toggle="pill">playlist</a></li>
+			  <li><a href="#remote" data-toggle="pill">remote</a></li>
+			  <li><a href="#url" data-toggle="pill">url</a></li>
+			</ul>
+
+			<div class="pill-content">
+				<!-- YOUTUBE SEARCH-->
+			  <div class="pill-pane active" id="youtube">
+					<div class="row">
+						<div class="padding-left padding-right input-group">
+						  <input id="getURL" type="text" class="form-control" placeholder="url / search">
+							<div class="input-group-btn ">
+		              <button type="button" class="btn btn-default" tabindex="-1">fetch</button>
+		          </div>
+						</div>
+
+						<div class="video padding-left padding-top padding-bottomg " style="display: block;">
+							<!-- ### Results will be append here ###  -->
+						</div>
+					</div>  	
+			  </div>
+				<!-- Playlist-->
+			  <div class="pill-pane" id="playlist">
+			  	<div class="playlist">
+			  		
+			  	</div>
+			  </div>
+
+				<!-- Remote control / mplayer-->
+			  <div class="pill-pane" id="remote">
+					<div class="padding-left padding-right padding-top btn-group btn-group-justified ">
+		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-fast-backward"></span></a>
+		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-backward"></span></a>
+		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-play"></a>
+		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-pause"></span></a>
+		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-stop"></span></a>
+		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-forward"></span></a>
+		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-fast-forward"></span></a>
+		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-mute"></a>
+		      </div>
+			  </div>
+				<!-- fetch url video / stream-->
+			  <div class="pill-pane" id="url">
+		  		<div class="row">
+						<div class="padding-left padding-right input-group">
+						  <input type="text" class="form-control" placeholder="url">
+							<div class="input-group-btn ">
+		              <button type="button" class="btn btn-default" tabindex="-1">go</button>
+		          </div>
+						</div>
+						<div class="video padding-left padding-top padding-bottomg " style="display: block;">
+							<!-- ### Results will be append here ###  -->
+						</div>
+					</div>
+				</div>
+
+		  </div>
+		</div>	
+		
   {{greeting}}
-  <input type="button" value="Click" />
 </template>

@@ -7,7 +7,7 @@ if (Meteor.isClient) {
     'click input' : function () {
       // template data, if any, is available in 'this'
       if (typeof console !== 'undefined')
-        Meteor.call('youtubeQuery');
+        Meteor.call('youtubeQuery','test', function(error, result){console.log(result);});
     }
   });
 }
@@ -16,27 +16,20 @@ if (Meteor.isServer) {
   Meteor.startup(function () {
     var cp = Npm.require('child_process');
 
-    Meteor.Router.add('/bookmarklet/:web', 'GET', function(web) {
-      //db things
-      console.log('test');
-      // Checks Play mode
-
-      console.log(web);
-
-    });
-
-    Meteor.Router.add('/404', [404, "There's nothing here!"]);
-
-    Meteor.Router.add('/bookmarklet/', 'GET', function() {
-      return [204, 'LALALALLA No Content'];
-    });
-
-
     Meteor.methods({
-      youtubeQuery: function(){
-          console.log('###Youtube');
-          parseWeb('http://www.youtube.com/watch?v=duezioB0mxc')
-          //Meteor.call('parse','http://www.youtube.com/watch?v=duezioB0mxc');
+      youtubeQuery: function(query){
+      console.log('###Youtube');
+      check(query, String);
+      this.unblock();
+      var max_videos = 12;
+      var result = Meteor.http.call("GET", "http://gdata.youtube.com/feeds/api/videos",
+        {params: {q: query,'max-results':max_videos,alt:'json'}});
+        if (result.statusCode === 200)
+           return JSON.parse(result.content);
+        return false;
+      
+      //parseWeb('http://www.youtube.com/watch?v=duezioB0mxc')
+      //Meteor.call('parse','http://www.youtube.com/watch?v=duezioB0mxc');
       }
     });
 
