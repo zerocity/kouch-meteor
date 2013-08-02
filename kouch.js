@@ -1,13 +1,15 @@
 if (Meteor.isClient) {
-  Template.hello.greeting = function () {
-    return "Welcome to kouch.";
+  Template.hello.playlist = function () {
+    Meteor.call('youtubeQuery',Session.get('query'), function(error, result){
+      return result
+    });
   };
 
   Template.hello.events({
     'click input' : function () {
-      // template data, if any, is available in 'this'
       if (typeof console !== 'undefined')
-        Meteor.call('youtubeQuery','test', function(error, result){console.log(result);});
+        console.log('test');
+        Session.set("query",this);
     }
   });
 }
@@ -59,5 +61,6 @@ if (Meteor.isServer) {
          };
        });
       };
+
   });
 }
