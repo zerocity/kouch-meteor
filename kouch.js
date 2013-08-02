@@ -1,14 +1,17 @@
 if (Meteor.isClient) {
-  Template.hello.playlist = function () {
-    Meteor.call('youtubeQuery',Session.get('query'), function(error, result){
-      return result
-    });
+  
+  Meteor.call('youtubeQuery','test', function(error, result){
+    console.log(result.feed.entry);
+    Session.set('q', result.feed.entry);
+  });
+  
+  Template.hello.world = function () {
+    return Session.get('q');
   };
 
   Template.hello.events({
     'click input' : function () {
       if (typeof console !== 'undefined')
-        console.log('test');
         Session.set("query",this);
     }
   });

@@ -63,7 +63,22 @@
 			 }); 
 
 		
-	  
+	  <template name="playlist2mrt">
+		<div class="media">
+		  <a class="pull-left" href="#">
+		    <img class="media-object" style="width: 64px; height: 64px;" src="{{thumbnail}}">
+		  </a>
+		  <div class="media-body">
+		    <h4 class="media-heading">{{title}}</h4>
+		    <a class="btn button btn-primary watch" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{id}}"><span class="glyphicon glyphicon-share"></span> Queue</a>
+		    <a class="btn button btn-primary watch" data-id={{id}}><span class="glyphicon glyphicon-play"></span> Play</a>
+		    <a class="btn button btn-primary watch" data-id={{id}}><span class="glyphicon glyphicon-bookmark"></span> bookmark</a>
+		  </div>
+		</div>
+</template>
+
 
 
 	  });	*/
+
+	  
