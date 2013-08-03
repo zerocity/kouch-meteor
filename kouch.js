@@ -47,12 +47,19 @@ if (Meteor.isClient) {
     'click .mute' :function(data){
       Meteor.call('mute');
       console.log('### mute: '+ this.title);
+    },
+    'click #kripp' : function(data){
+      Meteor.call('startStream');
+      console.log('### PLAY STREAM');
+    },
+    'click .fullscreen' : function(){
+      Meteor.call('fullscreen');
     }
   });
 }
 
 if (Meteor.isServer) {
-  var cplayer;
+  var cplayer; // current player
   Meteor.startup(function () {
     var cp = Npm.require('child_process');
 
@@ -69,49 +76,32 @@ if (Meteor.isServer) {
 
 
     Meteor.methods({
-      youtubeQuery: function(query){
-        //is not nessesary
-      console.log('### '+query);
-      check(query, String);
-      this.unblock();
-      var max_videos = 12;
-      var result = Meteor.http.call("GET", "http://gdata.youtube.com/feeds/api/videos",
-        {params: {q: query,'max-results':max_videos,alt:'json'}});
-        if (result.statusCode === 200){
-          var simpleJson = JSON.parse(result.content).feed.entry ;
-
-          var data = _.map(simpleJson, function (num,key){
-            var a = num.id.$t.split("/"),
-              id = a[6],
-              title = num.title.$t,
-              thumbnail = num.media$group.media$thumbnail[0].url,
-              description = num.media$group.media$description.$t,
-              totalSec = num.media$group.yt$duration.seconds,
-              hours = parseInt( totalSec / 3600 ) % 24,
-              minutes = parseInt( totalSec / 60 ) % 60,
-              seconds = totalSec % 60,
-              duration = (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds  < 10 ? "0" + seconds : seconds);
-                   
-              return {
-                id:id,
-                title:title,
-                thumbnail:thumbnail,
-                description:description,
-                duration:duration};
-              });
-
-          return data
-
-        }else{
-          return false;
-        }
-      //parseWeb('http://www.youtube.com/watch?v=duezioB0mxc')
-      //Meteor.call('parse','http://www.youtube.com/watch?v=duezioB0mxc');
-      },
       mute : function(){
         console.log('Mute');
-        cplayer.stdin.write('\nmute')
-      },      
+        cplayer.stdin.write('\nmute');
+      },    
+      fullscreen : function(){
+        console.log('Fullscreen');
+        //cplayer.stdin.write('\nf');
+      },
+      startStream : function(){
+        console.log('### Start Stream: ');
+        cp.exec('livestreamer twitch.tv/nl_kripp 480p --player mplayer',function (error, stdout, stderr,stdin) {
+          // parameter bug
+          // -f choise prefeard video format http://en.wikipedia.org/wiki/YouTube#Quality_and_codecs
+         if (error) {
+           console.log(error.stack);
+           console.log('Error code: '+error.code);
+           console.log('Signal received: '+error.signal);
+         }
+         if (stdout) {
+            console.log(stdout);
+            player(stdout);
+            cplayer.stdin.write('\nf');
+         };
+       });
+y
+      },  
       parseWeb : function(sourceUrl) {
         console.log('###Parse');
         cp.exec('youtube-dl -g -f 34/35/45/84 '+sourceUrl.toString(),function (error, stdout, stderr,stdin) {
@@ -127,7 +117,7 @@ if (Meteor.isServer) {
             player(stdout);
          };
        });
-      }
+      } 
     });
   });
 }
