@@ -43,6 +43,10 @@ if (Meteor.isClient) {
     'click .play' : function(data){
       Meteor.call('parseWeb',this.id);
       console.log('### PLAY: '+ this.title);
+    },
+    'click .mute' :function(data){
+      Meteor.call('mute');
+      console.log('### mute: '+ this.title);
     }
   });
 }
@@ -91,9 +95,14 @@ if (Meteor.isServer) {
       //parseWeb('http://www.youtube.com/watch?v=duezioB0mxc')
       //Meteor.call('parse','http://www.youtube.com/watch?v=duezioB0mxc');
       },
+      mute : function(){
+        console.log('test');
+        player.stdin.write('\nmute');
+      },      
       parseWeb : function(sourceUrl) {
         console.log('###Parse');
-        cp.exec('youtube-dl -g -f 34/35/45/84 '+sourceUrl,function (error, stdout, stderr,stdin) {
+        cp.exec('youtube-dl -g -f 34/35/45/84 '+sourceUrl.toString(),function (error, stdout, stderr,stdin) {
+          // parameter bug
           // -f choise prefeard video format http://en.wikipedia.org/wiki/YouTube#Quality_and_codecs
          if (error) {
            console.log(error.stack);
@@ -101,7 +110,7 @@ if (Meteor.isServer) {
            console.log('Signal received: '+error.signal);
          }
          if (stdout) {
-            //console.log(stdout);
+            console.log(stdout);
             player(stdout);
          };
        });
@@ -115,7 +124,7 @@ if (Meteor.isServer) {
           console.log('### START PLAYER ###');
           player.stdout.on('data', function (data) {
             // send commands
-            //mplayer.stdin.write('\nmute')
+            //player.stdin.write('\nmute')
           });
       };
 
