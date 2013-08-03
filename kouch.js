@@ -1,8 +1,7 @@
 if (Meteor.isClient) {
   
   Meteor.call('youtubeQuery','test', function(error, result){
-    console.log(result.feed.entry);
-    Session.set('q', result.feed.entry);
+    Session.set('q', result);
   });
   
   Template.hello.world = function () {
@@ -12,6 +11,7 @@ if (Meteor.isClient) {
   Template.hello.events({
     'click input' : function () {
       if (typeof console !== 'undefined')
+        console.log(this);
         Session.set("query",this);
     }
   });
@@ -23,16 +23,40 @@ if (Meteor.isServer) {
 
     Meteor.methods({
       youtubeQuery: function(query){
-      console.log('###Youtube');
+      console.log('###Youtube\n');
       check(query, String);
       this.unblock();
       var max_videos = 12;
       var result = Meteor.http.call("GET", "http://gdata.youtube.com/feeds/api/videos",
         {params: {q: query,'max-results':max_videos,alt:'json'}});
-        if (result.statusCode === 200)
-           return JSON.parse(result.content);
-        return false;
-      
+        if (result.statusCode === 200){
+          var simpleJson = JSON.parse(result.content).feed.entry ;
+
+          var data = _.map(simpleJson, function (num,key){
+            var a = num.id.$t.split("/"),
+              id = a[6],
+              title = num.title.$t,
+              thumbnail = num.media$group.media$thumbnail[0].url,
+              description = num.media$group.media$description.$t,
+              totalSec = num.media$group.yt$duration.seconds,
+              hours = parseInt( totalSec / 3600 ) % 24,
+              minutes = parseInt( totalSec / 60 ) % 60,
+              seconds = totalSec % 60,
+              duration = (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds  < 10 ? "0" + seconds : seconds);
+                   
+              return {
+                id:id,
+                title:title,
+                thumbnail:thumbnail,
+                description:description,
+                duration:duration};
+              });
+
+          return data
+
+        }else{
+          return false;
+        }
       //parseWeb('http://www.youtube.com/watch?v=duezioB0mxc')
       //Meteor.call('parse','http://www.youtube.com/watch?v=duezioB0mxc');
       }
