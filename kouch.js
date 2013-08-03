@@ -52,8 +52,21 @@ if (Meteor.isClient) {
 }
 
 if (Meteor.isServer) {
+  var cplayer;
   Meteor.startup(function () {
     var cp = Npm.require('child_process');
+
+    var player = function(sourceUrl) {
+      console.log('###Player');
+      cplayer = cp.spawn('mplayer',['-slave','-cache','4096','-fs',sourceUrl.trim()]);
+      //var player = cp.spawn('omxplayer',[sourceUrl.trim()]);16384
+      console.log('### START PLAYER ###');
+      cplayer.stdout.on('data', function (data) {
+        // send commands
+        //player.stdin.write('\nmute')
+        });
+      };
+
 
     Meteor.methods({
       youtubeQuery: function(query){
@@ -96,8 +109,8 @@ if (Meteor.isServer) {
       //Meteor.call('parse','http://www.youtube.com/watch?v=duezioB0mxc');
       },
       mute : function(){
-        console.log('test');
-        player.stdin.write('\nmute');
+        console.log('Mute');
+        cplayer.stdin.write('\nmute')
       },      
       parseWeb : function(sourceUrl) {
         console.log('###Parse');
@@ -116,17 +129,5 @@ if (Meteor.isServer) {
        });
       }
     });
-
-      var player = function(sourceUrl) {
-          console.log('###Player');
-          var player = cp.spawn('mplayer',['-slave','-cache','4096','-fs',sourceUrl.trim()]);
-          //var player = cp.spawn('omxplayer',[sourceUrl.trim()]);16384
-          console.log('### START PLAYER ###');
-          player.stdout.on('data', function (data) {
-            // send commands
-            //player.stdin.write('\nmute')
-          });
-      };
-
   });
 }
