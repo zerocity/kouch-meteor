@@ -8,8 +8,11 @@
 
 <template name="hello">
 
-	<input type="text" id="query">
-
+<div class="">
+	<input type="text" id="query" value="" >
+	<a class="btn button btn-primary" id="search"><span class="glyphicon glyphicon-play"></span> Search</a>
+</div>
+	
 	{{#if world}}	
 	
 	<hr>
@@ -20,9 +23,9 @@
 		  </a>
 		  <div class="media-body">
 		    <h4 class="media-heading">{{title}}</h4>
-		    <a class="btn button btn-primary watch" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{id}}"><span class="glyphicon glyphicon-share"></span> Queue</a>
-		    <a class="btn button btn-primary watch" data-id={{id}}><span class="glyphicon glyphicon-play"></span> Play</a>
-		    <a class="btn button btn-primary watch" data-id={{id}}><span class="glyphicon glyphicon-bookmark"></span> bookmark</a>
+		    <a class="btn button btn-primary play" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{id}}"><span class="glyphicon glyphicon-share"></span> Queue</a>
+		    <a class="btn button btn-primary play" data-id={{id}}><span class="glyphicon glyphicon-play"></span> Play</a>
+		    <a class="btn button btn-primary play" data-id={{id}}><span class="glyphicon glyphicon-bookmark"></span> bookmark</a>
 		  </div>
 		</div>
 
