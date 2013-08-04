@@ -39,8 +39,8 @@
 								  </a>
 								  <div class="media-body">
 								    <h4 class="media-heading">{{title}}</h4>
-								    <a class="btn button btn-primary play" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{id}}"><span class="glyphicon glyphicon-share"></span> Queue</a>
-								    <a class="btn button btn-primary mute" data-id={{id}}><span class="glyphicon glyphicon-play"></span> mute</a>
+								    <a class="btn button btn-primary play" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{id}}"><span class="glyphicon glyphicon-share"></span> Play</a>
+								    
 								    <a class="btn button btn-primary fullscreen" data-id={{id}}><span class="glyphicon glyphicon-bookmark"></span> bookmark</a>
 								  </div>
 								</div>
@@ -57,7 +57,33 @@
 				<!-- Playlist-->
 			  <div class="pill-pane" id="playlist">
 					<a class="btn button btn-primary" id="kripp"><span class="glyphicon glyphicon-play"></span> kripp</a>
-			  	<div class="playlist"></div>
+			  	<div class="playlist">
+
+						<div class="video padding-left padding-top padding-bottomg " style="display: block;">
+							{{#if getPlaylist}}	
+								{{#each getPlaylist}}
+								<div class="media">
+								  <a class="pull-left" href="#">
+								    <img class="media-object" style="width: 64px; height: 64px;" src="{{thumbnail}}">
+								  </a>
+								  <div class="media-body">
+								    <h4 class="media-heading">{{title}}</h4>
+								    <a class="btn button btn-primary play" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{id}}"><span class="glyphicon glyphicon-share"></span> Play</a>
+								    
+								    <a class="btn button btn-primary fullscreen" data-id={{id}}><span class="glyphicon glyphicon-bookmark"></span> bookmark</a>
+								  </div>
+								</div>
+									<p>{{title.$t}}</p>
+									<hr>
+						  	{{/each}}
+							{{else}}
+								<p>ne doch net</p>
+							{{/if}}
+									<!-- ### Results will be append here ###  -->
+						</div>			  		
+
+
+			  	</div>
 			  </div>
 
 			  	<!-- Remote control / mplayer-->
@@ -72,6 +98,14 @@
 		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-fast-forward"></span></a>
 		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-mute"></a>
 		      </div>
+		      <div class="padding-left padding-right padding-top btn-group btn-group-justified ">
+						<a class="btn button btn-primary mute" data-id={{id}}><span class="glyphicon glyphicon-volume-down"></span></a>
+						<a class="btn button btn-primary mute" data-id={{id}}><span class="glyphicon glyphicon-volume-off"></span> </a>
+						<a class="btn button btn-primary mute" data-id={{id}}><span class="glyphicon glyphicon-volume-up"></span></a>
+		      </div>
+
+
+
 			  </div>
 				<!-- fetch url video / stream-->
 			  <div class="pill-pane" id="url">

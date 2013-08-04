@@ -8,6 +8,12 @@ if (Meteor.isClient) {
     return Session.get('q');
   };
 
+  Template.hello.getPlaylist = function () {
+    Meteor.call('getPlaylist',function (error,results) {
+      return results
+    });
+  };
+
   Template.hello.events({
     'click #search' : function (data) {
         var query = $('#query').val();
@@ -41,7 +47,8 @@ if (Meteor.isClient) {
           });
     },
     'click .play' : function(data){
-      Meteor.call('parseWeb',this.id);
+      Meteor.call('addToPlaylist',$('#query').val(),this);
+      //Meteor.call('parseWeb',this.id);
       console.log('### PLAY: '+ this.title);
     },
     'click .mute' :function(data){
@@ -84,6 +91,22 @@ if (Meteor.isServer) {
       fullscreen : function(){
         console.log('Fullscreen');
         cplayer.stdin.write('\nf');
+      },
+      addToPlaylist : function(searchQuery,data){
+        console.log(searchQuery);
+        console.log(data);
+        Playlist.insert({searchQuery:searchQuery,
+          youtubeId:data.id,
+          title:data.title,
+          thumbnail:data.thumbnail,
+          description:data.description,
+          duration:data.duration,
+          date:Date.now()
+        });
+      },
+      getPlaylist : function(){
+        var pl = Playlist.find({}).fetch()   
+        return pl
       },
       startStream : function(){
         console.log('### Start Stream: ');
