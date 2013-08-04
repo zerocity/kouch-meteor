@@ -1,15 +1,4 @@
-<head>
-  <title>kouch</title>
-</head>
-
-<body>
-	<div class="container">
-		{{> hello}}			
-	</div>
-
-</body>
-
-<template name="hello">
+<template name="remote">
 
 			<ul class="padding-left padding-top padding-bottom nav nav-pills" data-pills="pills">
 			  <li  class="active" ><a href="#youtube" data-toggle="pill">Search</a></li>
@@ -25,8 +14,7 @@
 						<div class="padding-left padding-right input-group">
 						  <input id="query" type="text" class="form-control" placeholder="url / search">
 							<div class="input-group-btn ">
-								<a class="btn button btn-primary" id="search"><span class="glyphicon glyphicon-play"></span>Youtube Search</a>
-		            <button type="button" id="search" class="btn btn-default" tabindex="-1">fetch url</button>
+								<a class="btn button btn-primary" id="search">Youtube Search <span class="glyphicon glyphicon-play"></span></a>
 		          </div>
 						</div>
 
@@ -39,9 +27,7 @@
 								  </a>
 								  <div class="media-body">
 								    <h4 class="media-heading">{{title}}</h4>
-								    <a class="btn button btn-primary play" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{id}}"><span class="glyphicon glyphicon-share"></span> Play</a>
-								    
-								    <a class="btn button btn-primary fullscreen" data-id={{id}}><span class="glyphicon glyphicon-bookmark"></span> bookmark</a>
+								    <a class="btn button btn-primary playStart" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{youtubeId}}"><span class="glyphicon glyphicon-play"></span> Play</a>
 								  </div>
 								</div>
 									<p>{{title.$t}}</p>
@@ -56,8 +42,9 @@
 			  </div>
 				<!-- Playlist-->
 			  <div class="pill-pane" id="playlist">
-					<a class="btn button btn-primary" id="kripp"><span class="glyphicon glyphicon-play"></span> kripp</a>
+					<!-- <a class="btn button btn-primary" id="kripp"><span class="glyphicon glyphicon-play"></span> kripp</a> -->
 			  	<div class="playlist">
+
 
 						<div class="video padding-left padding-top padding-bottomg " style="display: block;">
 							{{#if getPlaylist}}	
@@ -68,9 +55,7 @@
 								  </a>
 								  <div class="media-body">
 								    <h4 class="media-heading">{{title}}</h4>
-								    <a class="btn button btn-primary play" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{id}}"><span class="glyphicon glyphicon-share"></span> Play</a>
-								    
-								    <a class="btn button btn-primary fullscreen" data-id={{id}}><span class="glyphicon glyphicon-bookmark"></span> bookmark</a>
+								    <a class="btn button btn-primary playStart" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{youtubeId}}"><span class="glyphicon glyphicon-share"></span> Play</a>
 								  </div>
 								</div>
 									<p>{{title.$t}}</p>
@@ -79,10 +64,8 @@
 							{{else}}
 								<p>ne doch net</p>
 							{{/if}}
-									<!-- ### Results will be append here ###  -->
 						</div>			  		
-
-
+									<!-- ### Results will be append here ###  -->
 			  	</div>
 			  </div>
 
@@ -91,17 +74,17 @@
 					<div class="padding-left padding-right padding-top btn-group btn-group-justified ">
 		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-fast-backward"></span></a>
 		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-backward"></span></a>
-		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-play"></a>
-		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-pause"></span></a>
-		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-stop"></span></a>
+		        <a href="#" class="btn btn-default pause"><span class="glyphicon glyphicon-play"></a>
+		        <a href="#" class="btn btn-default pause"><span class="glyphicon glyphicon-pause"></span></a>
+		        <a href="#" class="btn btn-default stop"><span class="glyphicon glyphicon-stop"></span></a>
 		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-forward"></span></a>
 		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-fast-forward"></span></a>
 		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-mute"></a>
 		      </div>
 		      <div class="padding-left padding-right padding-top btn-group btn-group-justified ">
-						<a class="btn button btn-primary mute" data-id={{id}}><span class="glyphicon glyphicon-volume-down"></span></a>
-						<a class="btn button btn-primary mute" data-id={{id}}><span class="glyphicon glyphicon-volume-off"></span> </a>
-						<a class="btn button btn-primary mute" data-id={{id}}><span class="glyphicon glyphicon-volume-up"></span></a>
+						<a class="btn button btn-primary mute" ><span class="glyphicon glyphicon-volume-down"></span></a>
+						<a class="btn button btn-primary mute" ><span class="glyphicon glyphicon-volume-off"></span> </a>
+						<a class="btn button btn-primary mute" ><span class="glyphicon glyphicon-volume-up"></span></a>
 		      </div>
 
 
@@ -121,6 +104,4 @@
 						</div>
 					</div>
 				</div>
-
-
 </template>
