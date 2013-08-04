@@ -1,6 +1,7 @@
 Meteor.startup(function () {
   var cplayer;
   var cp = Npm.require('child_process');
+
   var playerState = {
     play : false,
     mute : false,
@@ -8,19 +9,25 @@ Meteor.startup(function () {
 
   var Playlist = new Meteor.Collection("playlist");
   var Kouch = new Meteor.Collection("Kouch"); 
-
+  var Queue = new Meteor.Collection("queue");
 
   var player = function(sourceUrl) {
-    cplayer = cp.spawn('mplayer',['-slave','-cache','4096','-fs',sourceUrl.trim()]);
-    //var player = cp.spawn('omxplayer',[sourceUrl.trim()]);16384
-    console.log('[CALL][Player]');
-    playerState.play = true;
-    cplayer.stdout.on('data', function (data) {
-      //console.log('[CALL][MPlayer]\n' +data);
-      // send commands //player.stdin.write('\nmute')
+    if (playerState.play == false) {   
+      cplayer = cp.spawn('mplayer',['-slave','-cache','4096','-fs',sourceUrl.trim()]);
+      //var player = cp.spawn('omxplayer',[sourceUrl.trim()]);16384
+      console.log('[CALL][Player]');
+      playerState.play = true;
+      cplayer.stdout.on('data', function (data) {
+        //console.log('[CALL][MPlayer]\n' +data);
+        // send commands //player.stdin.write('\nmute')
       });
-    };
 
+      cplayer.on('close',function(data) {
+        playerState.play = false;
+        console.log('[Player] close');
+      });
+    }
+  }
 
   Meteor.methods({
     playerMute : function(){
@@ -48,6 +55,22 @@ Meteor.startup(function () {
     playerStop : function(){
       console.log('[CALL][PlAYER] Stop');
       cplayer.stdin.write('\nstop\n');
+    },
+    volDown : function(){
+      console.log('[CALL][PlAYER] Vol Down');
+      cplayer.stdin.write('\nvolume -10\n');
+    },    
+    volUp : function(){
+      console.log('[CALL][PlAYER] Vol Up');
+      cplayer.stdin.write('\nvolume 10\n');
+    },
+    playerLeft : function(){
+      console.log('[CALL][PlAYER] Seek -15 sec');
+      cplayer.stdin.write('\nseek -15 0\n');
+    },    
+    playerRight : function(){
+      console.log('[CALL][PlAYER] Seek + 15');
+      cplayer.stdin.write('\nseek 15 0\n');
     },   
     playerFullscreen : function(){
       console.log('[CALL] Fullscreen');
@@ -56,7 +79,7 @@ Meteor.startup(function () {
     addToPlaylist : function(searchQuery,data){
       //TODO do check if the video is allready in the playlist + 1 score
       console.log('[CALL][INSERT] '+searchQuery);
-      Playlist.insert({searchQuery:searchQuery,
+      return Playlist.insert({searchQuery:searchQuery,
         youtubeId:data.youtubeId,
         title:data.title,
         thumbnail:data.thumbnail,
@@ -64,6 +87,11 @@ Meteor.startup(function () {
         duration:data.duration,
         date:Date.now()
       });
+    },
+    addToQueue : function(searchUrl,playlistId){
+      //TODO do check if the video is allready in the playlist + 1 score
+      console.log('[CALL][INSERT][QUEUE] '+playlistId);
+      Queue.insert({sourceUrl:sourceUrl,playlistId:playlistId});
     },
     getPlaylist : function(){
       var pl = Playlist.find({}).fetch();   
@@ -86,23 +114,26 @@ Meteor.startup(function () {
        };
      });
     },  
-    parseWeb : function(sourceUrl) {
+    parseWeb : function(sourceUrl,playlistId) {
       console.log('[CALL][Parse]' + sourceUrl);
       cp.exec('youtube-dl -g -f 34/35/45/84 '+sourceUrl.toString(),function (error, stdout, stderr,stdin) {
         // parameter bug
         // -f choise prefeard video format http://en.wikipedia.org/wiki/YouTube#Quality_and_codecs
+
        if (error) {
          console.log(error.stack);
          console.log('Error code: '+error.code);
          console.log('Signal received: '+error.signal);
        }
-       if (stdout) {
-          //console.log(stdout);
-          player(stdout);
-       };
-     });
-    } 
-  });
 
+       if (stdout) {
+          player(stdout,playlistId);
+       }
+
+       });
+      
+      }
+
+  });
 
 });

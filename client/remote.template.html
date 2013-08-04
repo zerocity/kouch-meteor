@@ -1,12 +1,18 @@
 <template name="remote">
-
+			
 			<ul class="padding-left padding-top padding-bottom nav nav-pills" data-pills="pills">
 			  <li  class="active" ><a href="#youtube" data-toggle="pill">Search</a></li>
 			  <li><a href="#playlist" data-toggle="pill">playlist</a></li>
 			  <li><a href="#remote" data-toggle="pill">remote</a></li>
 			  <li><a href="#url" data-toggle="pill">url</a></li>
 			</ul>
-
+			
+			{{#if state}}
+			<div class="well">
+				<p>{{state}}</p>				
+			</div>
+			{{/if}}
+			
 			<div class="pill-content">
 				<!-- YOUTUBE SEARCH-->
 			  <div class="pill-pane active" id="youtube">
@@ -73,18 +79,16 @@
 			  <div class="pill-pane" id="remote">
 					<div class="padding-left padding-right padding-top btn-group btn-group-justified ">
 		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-fast-backward"></span></a>
-		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-backward"></span></a>
-		        <a href="#" class="btn btn-default pause"><span class="glyphicon glyphicon-play"></a>
-		        <a href="#" class="btn btn-default pause"><span class="glyphicon glyphicon-pause"></span></a>
+		        <a href="#" class="btn btn-default left"><span class="glyphicon glyphicon-backward"></span></a>
+		        <a href="#" class="btn btn-default pause"><span class="glyphicon glyphicon-play"><span class="glyphicon glyphicon-pause"></span></a>
 		        <a href="#" class="btn btn-default stop"><span class="glyphicon glyphicon-stop"></span></a>
-		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-forward"></span></a>
+		        <a href="#" class="btn btn-default right"><span class="glyphicon glyphicon-forward"></span></a>
 		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-fast-forward"></span></a>
-		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-mute"></a>
 		      </div>
 		      <div class="padding-left padding-right padding-top btn-group btn-group-justified ">
-						<a class="btn button btn-primary mute" ><span class="glyphicon glyphicon-volume-down"></span></a>
+						<a class="btn button btn-primary vol-down" ><span class="glyphicon glyphicon-volume-down"></span></a>
 						<a class="btn button btn-primary mute" ><span class="glyphicon glyphicon-volume-off"></span> </a>
-						<a class="btn button btn-primary mute" ><span class="glyphicon glyphicon-volume-up"></span></a>
+						<a class="btn button btn-primary vol-up" ><span class="glyphicon glyphicon-volume-up"></span></a>
 		      </div>
 
 

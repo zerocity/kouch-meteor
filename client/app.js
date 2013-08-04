@@ -1,5 +1,6 @@
 if (Meteor.isClient){
   var Playlist = new Meteor.Collection("playlist");
+  var Queue = new Meteor.Collection("queue");
   var Kouch = new Meteor.Collection("Kouch"); 
 }
 
@@ -7,13 +8,12 @@ Template.remote.world = function () {
   return Session.get('q');
 };
 
+Template.remote.state = function (){
+  return Session.get('state')
+}
+
 Template.remote.getPlaylist = function () {
-/*    Meteor.call('getPlaylist', function(error,results) {
-    console.log(results)
-    return results
-  });*/
   var pl = Playlist.find({},{sort:['date','asc']}).fetch()
-  //console.log('[log]'+pl);
   return pl
 };
 
@@ -52,15 +52,16 @@ Template.remote.events({
   'click .playStart' : function(data){
     //
     // ##### parseWeb
-    // bug with this.youtubeID maybe is fixed
-    Meteor.call('addToPlaylist',$('#query').val(),this);
-    if (this.youtubeId) {
-      Meteor.call('parseWeb',this.youtubeId);
-    }else{
-      console.log(this);
-      Meteor.call('parseWeb',this.id);
-    }
-    console.log('[log][PLAY] ');
+    //
+    Meteor.call('addToPlaylist',$('#query').val(),this,function (error,results) {
+      if (data.toElement.dataset.id) {
+        console.log('[log][Playlist] '+ data.toElement.dataset.id);
+        Meteor.call('parseWeb',data.toElement.dataset.id,results,function(result){
+            console.log('[State] ',result);
+            //Meteor.call('addToQueue',sourceUrl,playlistId)
+          });
+        }
+    });
   },
   'click .mute' :function(data){
     //
@@ -89,6 +90,34 @@ Template.remote.events({
     //
     Meteor.call('playerStop');
     console.log('[log][STOP] ');
+  },
+  'click .vol-down' :function(data){
+    //
+    // ##### playerStop
+    //
+    Meteor.call('volDown');
+    console.log('[log][vol-down] ');
+  },
+  'click .vol-up' :function(data){
+    //
+    // ##### playerStop
+    //
+    Meteor.call('volUp');
+    console.log('[log][vol-up] ');
+  },
+  'click .left' :function(data){
+    //
+    // ##### playerStop
+    //
+    Meteor.call('playerLeft');
+    console.log('[log][Left] ');
+  },
+  'click .right' :function(data){
+    //
+    // ##### playerStop
+    //
+    Meteor.call('playerRight');
+    console.log('[log][Seek] ');
   },
   'click #kripp' : function(data){
     //
