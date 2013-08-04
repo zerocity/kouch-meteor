@@ -1,6 +1,7 @@
 {
   "packages": {
     "npm": {},
-    "router": {}
+    "router": {},
+    "bootstrap-3": {}
   }
 }

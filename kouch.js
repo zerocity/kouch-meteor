@@ -69,6 +69,7 @@ if (Meteor.isServer) {
       //var player = cp.spawn('omxplayer',[sourceUrl.trim()]);16384
       console.log('### START PLAYER ###');
       cplayer.stdout.on('data', function (data) {
+        //console.log(data);
         // send commands
         //player.stdin.write('\nmute')
         });
@@ -82,7 +83,7 @@ if (Meteor.isServer) {
       },    
       fullscreen : function(){
         console.log('Fullscreen');
-        //cplayer.stdin.write('\nf');
+        cplayer.stdin.write('\nf');
       },
       startStream : function(){
         console.log('### Start Stream: ');

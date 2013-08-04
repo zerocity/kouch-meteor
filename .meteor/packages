@@ -6,6 +6,5 @@
 autopublish
 insecure
 preserve-inputs
-bootstrap
 http
 jquery
