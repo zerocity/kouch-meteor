@@ -54,13 +54,13 @@ Template.remote.events({
     // ##### parseWeb
     //
     Meteor.call('addToPlaylist',$('#query').val(),this,function (error,results) {
+      console.log('[log][addToPlaylist] ',results);
       if (data.toElement.dataset.id) {
         console.log('[log][Playlist] '+ data.toElement.dataset.id);
-        Meteor.call('parseWeb',data.toElement.dataset.id,results,function(result){
-            console.log('[State] ',result);
-            //Meteor.call('addToQueue',sourceUrl,playlistId)
-          });
-        }
+        Meteor.call('parseWeb',data.toElement.dataset.id,results);
+      }else{
+        console.log('[log][addToPlaylist] ',error);
+      }
     });
   },
   'click .mute' :function(data){

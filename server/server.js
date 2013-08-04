@@ -5,6 +5,7 @@ Meteor.startup(function () {
   var playerState = {
     play : false,
     mute : false,
+    queue : false
   }
 
   var Playlist = new Meteor.Collection("playlist");
@@ -25,6 +26,10 @@ Meteor.startup(function () {
       cplayer.on('close',function(data) {
         playerState.play = false;
         console.log('[Player] close');
+        if (playerState.queue == true) {
+          console.log('[PlAYER][QUEUE] Start next Video');
+          playerState.queue = false;
+        }
       });
     }
   }
@@ -43,7 +48,6 @@ Meteor.startup(function () {
       //cplayer.stdin.write('\nosd_show_progression');
     },
     playerPause : function(){
-      console.log(playerState.play);
       if (playerState.play == true) {
         console.log('[CALL][PlAYER] Pause');
         cplayer.stdin.write('\npause\n');
@@ -88,11 +92,6 @@ Meteor.startup(function () {
         date:Date.now()
       });
     },
-    addToQueue : function(searchUrl,playlistId){
-      //TODO do check if the video is allready in the playlist + 1 score
-      console.log('[CALL][INSERT][QUEUE] '+playlistId);
-      Queue.insert({sourceUrl:sourceUrl,playlistId:playlistId});
-    },
     getPlaylist : function(){
       var pl = Playlist.find({}).fetch();   
       return pl
@@ -115,25 +114,30 @@ Meteor.startup(function () {
      });
     },  
     parseWeb : function(sourceUrl,playlistId) {
-      console.log('[CALL][Parse]' + sourceUrl);
-      cp.exec('youtube-dl -g -f 34/35/45/84 '+sourceUrl.toString(),function (error, stdout, stderr,stdin) {
-        // parameter bug
-        // -f choise prefeard video format http://en.wikipedia.org/wiki/YouTube#Quality_and_codecs
+      if (playerState.play == true) {
+        console.log('[CALL][INSERT][QUEUE] '+playlistId);
+        Queue.insert({sourceUrl:sourceUrl,playlistId:playlistId}); 
+        playerState.queue = true    
+      }else{
+        console.log('[CALL][Parse]' + sourceUrl);
+        cp.exec('youtube-dl -g -f 34/35/45/84 '+sourceUrl.toString(),function (error, stdout, stderr,stdin) {
+          // parameter bug
+          // -f choise prefeard video format http://en.wikipedia.org/wiki/YouTube#Quality_and_codecs
 
-       if (error) {
-         console.log(error.stack);
-         console.log('Error code: '+error.code);
-         console.log('Signal received: '+error.signal);
-       }
+        if (error) {
+          console.log(error.stack);
+          console.log('Error code: '+error.code);
+          console.log('Signal received: '+error.signal);
+        }
 
-       if (stdout) {
+        if (stdout) {
           player(stdout,playlistId);
-       }
-
+        }
+       
        });
-      
+    
       }
-
+    }
   });
 
 });
