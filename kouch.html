@@ -3,43 +3,90 @@
 </head>
 
 <body>
-  {{> hello}}
+	<div class="container">
+		{{> hello}}			
+	</div>
+
 </body>
 
 <template name="hello">
 
-<div class="">
-	<input type="text" id="query" value="" >
-	<a class="btn button btn-primary" id="search"><span class="glyphicon glyphicon-play"></span> Search</a>
-	<a class="btn button btn-primary" id="kripp"><span class="glyphicon glyphicon-play"></span> kripp</a>
-</div>
-	
-	{{#if world}}	
-	
-	<hr>
-		{{#each world}}
-		<div class="media">
-		  <a class="pull-left" href="#">
-		    <img class="media-object" style="width: 64px; height: 64px;" src="{{thumbnail}}">
-		  </a>
-		  <div class="media-body">
-		    <h4 class="media-heading">{{title}}</h4>
-		    <a class="btn button btn-primary play" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{id}}"><span class="glyphicon glyphicon-share"></span> Queue</a>
-		    <a class="btn button btn-primary mute" data-id={{id}}><span class="glyphicon glyphicon-play"></span> mute</a>
-		    <a class="btn button btn-primary fullscreen" data-id={{id}}><span class="glyphicon glyphicon-bookmark"></span> bookmark</a>
-		  </div>
-		</div>
+			<ul class="padding-left padding-top padding-bottom nav nav-pills" data-pills="pills">
+			  <li  class="active" ><a href="#youtube" data-toggle="pill">Search</a></li>
+			  <li><a href="#playlist" data-toggle="pill">playlist</a></li>
+			  <li><a href="#remote" data-toggle="pill">remote</a></li>
+			  <li><a href="#url" data-toggle="pill">url</a></li>
+			</ul>
 
-			<p>{{title.$t}}</p>
-			<hr>
-  	{{/each}}
-	<hr>
+			<div class="pill-content">
+				<!-- YOUTUBE SEARCH-->
+			  <div class="pill-pane active" id="youtube">
+					<div class="row">
+						<div class="padding-left padding-right input-group">
+						  <input id="query" type="text" class="form-control" placeholder="url / search">
+							<div class="input-group-btn ">
+								<a class="btn button btn-primary" id="search"><span class="glyphicon glyphicon-play"></span>Youtube Search</a>
+		            <button type="button" id="search" class="btn btn-default" tabindex="-1">fetch url</button>
+		          </div>
+						</div>
 
-	{{else}}
-		<p>ne doch net</p>
-	{{/if}}
-	<hr>
+						<div class="video padding-left padding-top padding-bottomg " style="display: block;">
+							{{#if world}}	
+								{{#each world}}
+								<div class="media">
+								  <a class="pull-left" href="#">
+								    <img class="media-object" style="width: 64px; height: 64px;" src="{{thumbnail}}">
+								  </a>
+								  <div class="media-body">
+								    <h4 class="media-heading">{{title}}</h4>
+								    <a class="btn button btn-primary play" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{id}}"><span class="glyphicon glyphicon-share"></span> Queue</a>
+								    <a class="btn button btn-primary mute" data-id={{id}}><span class="glyphicon glyphicon-play"></span> mute</a>
+								    <a class="btn button btn-primary fullscreen" data-id={{id}}><span class="glyphicon glyphicon-bookmark"></span> bookmark</a>
+								  </div>
+								</div>
+									<p>{{title.$t}}</p>
+									<hr>
+						  	{{/each}}
+							{{else}}
+								<p>ne doch net</p>
+							{{/if}}
+									<!-- ### Results will be append here ###  -->
+						</div>
+					</div>  	
+			  </div>
+				<!-- Playlist-->
+			  <div class="pill-pane" id="playlist">
+					<a class="btn button btn-primary" id="kripp"><span class="glyphicon glyphicon-play"></span> kripp</a>
+			  	<div class="playlist"></div>
+			  </div>
 
+			  	<!-- Remote control / mplayer-->
+			  <div class="pill-pane" id="remote">
+					<div class="padding-left padding-right padding-top btn-group btn-group-justified ">
+		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-fast-backward"></span></a>
+		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-backward"></span></a>
+		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-play"></a>
+		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-pause"></span></a>
+		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-stop"></span></a>
+		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-forward"></span></a>
+		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-fast-forward"></span></a>
+		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-mute"></a>
+		      </div>
+			  </div>
+				<!-- fetch url video / stream-->
+			  <div class="pill-pane" id="url">
+		  		<div class="row">
+						<div class="padding-left padding-right input-group">
+						  <input type="text" class="form-control" placeholder="url">
+							<div class="input-group-btn ">
+		              <button type="button" class="btn btn-default" tabindex="-1">go</button>
+		          </div>
+						</div>
+						<div class="video padding-left padding-top padding-bottomg " style="display: block;">
+							<!-- ### Results will be append here ###  -->
+						</div>
+					</div>
+				</div>
 
 
 </template>
