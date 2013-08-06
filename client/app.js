@@ -3,8 +3,8 @@ if (Meteor.isClient){
   var Queue = new Meteor.Collection("queue");
   var Kouch = new Meteor.Collection("Kouch"); 
 }
-
-Template.remote.world = function () {
+  
+Template.remote.searchQueryResults = function () {
   return Session.get('q');
 };
 
@@ -53,13 +53,17 @@ Template.remote.events({
     //
     // ##### parseWeb
     //
-    Meteor.call('addToPlaylist',$('#query').val(),this,function (error,results) {
-      console.log('[log][addToPlaylist] ',results);
+    var query = $('#query').val();
+
+    console.log('[QUERY] ',query);
+
+    Meteor.call('addToPlaylist',query,this,function (error,results) {
       if (data.toElement.dataset.id) {
-        console.log('[log][Playlist] '+ data.toElement.dataset.id);
+        console.log('[log][Playlist] '+ data.toElement.dataset.id,' [DB][RESULTS] ',results);
         Meteor.call('parseWeb',data.toElement.dataset.id,results);
       }else{
-        console.log('[log][addToPlaylist] ',error);
+        console.error('[log][addToPlaylist] no dataset set',results);
+        //Meteor.call('parseWeb',data.toElement.dataset.id,results);
       }
     });
   },

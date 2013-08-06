@@ -1,4 +1,6 @@
 Meteor.startup(function () {
+  var Fiber = Npm.require("fibers");
+
   var cplayer;
   var cp = Npm.require('child_process');
 
@@ -8,9 +10,44 @@ Meteor.startup(function () {
     queue : false
   }
 
-  var Playlist = new Meteor.Collection("playlist");
   var Kouch = new Meteor.Collection("Kouch"); 
-  var Queue = new Meteor.Collection("queue");
+  var Playlist = new Meteor.Collection("playlist");
+  var history = new Meteor.Collection("Histroy");
+
+  playerState.queue = true
+
+  var NextQueue = function(){
+    Fiber(function(){
+      var q = Playlist.find({}).fetch(); 
+      console.log(q.length);
+
+      if (q.length != 0) {
+
+        console.log(q);
+
+        Playlist.remove(q[0]._id, function(){
+          console.log('Entry gelöscht',q[0]);
+          //Meteor.call('parseWeb',q[0].sourceUrl)            
+          Meteor.call('parseWeb',q[0].youtubeId)            
+        });
+
+      }else{
+        playerState.queue = false;
+        playerState.play == false;
+        console.log('[PlAYER][QUEUE][MODE] OFF');
+      }
+      //Meteor.call('parseWeb',q[0].sourceUrl);
+      //console.log(playerState.play);
+      //Queue.remove(q._id)
+      //player(q[0].sourceUrl)
+      //return console.log(typeof q._id);
+    }).run();
+  }
+
+
+  // Debuf mode for QUEUE
+  //NextQueue();
+
 
   var player = function(sourceUrl) {
     if (playerState.play == false) {   
@@ -18,9 +55,10 @@ Meteor.startup(function () {
       //var player = cp.spawn('omxplayer',[sourceUrl.trim()]);16384
       console.log('[CALL][Player]');
       playerState.play = true;
+
       cplayer.stdout.on('data', function (data) {
         //console.log('[CALL][MPlayer]\n' +data);
-        // send commands //player.stdin.write('\nmute')
+        //send commands //player.stdin.write('\nmute\n')
       });
 
       cplayer.on('close',function(data) {
@@ -28,8 +66,10 @@ Meteor.startup(function () {
         console.log('[Player] close');
         if (playerState.queue == true) {
           console.log('[PlAYER][QUEUE] Start next Video');
-          playerState.queue = false;
-          var qq = Meteor.call('getQueue')
+            NextQueue();
+          //removeQueue(next.id)
+          //player(next.sourceUrl)
+        }else{
           console.log('[PlAYER][QUEUE][MODE] OFF');
         }
       });
@@ -83,13 +123,18 @@ Meteor.startup(function () {
       cplayer.stdin.write('\nf\n');
     },
     getQueue : function(){
-      this.unblock();
-      console.log('query');
+      console.log('[CALL][QUEUE] Next');
+      getQueue();
       //return Queue.find({}).fetch()
     },
     addToPlaylist : function(searchQuery,data){
       //TODO do check if the video is allready in the playlist + 1 score
-      console.log('[CALL][INSERT] '+searchQuery);
+      console.log('[CALL][ADDTOPLAYLIST][INSERT] '+searchQuery);
+
+      var pl = Playlist.find({}).fetch()
+      console.log(pl[pl.length-1]);
+      console.log(data);
+
       return Playlist.insert({searchQuery:searchQuery,
         youtubeId:data.youtubeId,
         title:data.title,
@@ -98,6 +143,9 @@ Meteor.startup(function () {
         duration:data.duration,
         date:Date.now()
       });
+
+
+
     },
     getPlaylist : function(){
       var pl = Playlist.find({}).fetch();   
@@ -120,27 +168,30 @@ Meteor.startup(function () {
        };
      });
     },  
-    parseWeb : function(sourceUrl,playlistId) {
+    parseWeb : function(sourceUrl) {
       if (playerState.play == true) {
-        console.log('[CALL][INSERT][QUEUE] '+playlistId);
-        Queue.insert({sourceUrl:sourceUrl,playlistId:playlistId}); 
+        console.log('[CALL][INSERT][QUEUE] '+sourceUrl);
+        Histroy.insert({sourceUrl:sourceUrl}); 
         playerState.queue = true    
       }else{
         console.log('[CALL][Parse]' + sourceUrl);
         cp.exec('youtube-dl -g -f 34/35/45/84 '+sourceUrl.toString(),function (error, stdout, stderr,stdin) {
           // parameter bug
           // -f choise prefeard video format http://en.wikipedia.org/wiki/YouTube#Quality_and_codecs
-
-        if (error) {
+          if (error) {
+            if (error.code) {
+              console.log(error.code);
+            }
+          }else{
+            if (stdout) {
+              player(stdout);
+            }            
+          }
+/*        if (error) {
           console.log(error.stack);
           console.log('Error code: '+error.code);
           console.log('Signal received: '+error.signal);
-        }
-
-        if (stdout) {
-          player(stdout,playlistId);
-        }
-       
+        }*/      
        });
     
       }
