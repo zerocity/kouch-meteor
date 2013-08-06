@@ -29,6 +29,8 @@ Meteor.startup(function () {
         if (playerState.queue == true) {
           console.log('[PlAYER][QUEUE] Start next Video');
           playerState.queue = false;
+          var qq = Meteor.call('getQueue')
+          console.log('[PlAYER][QUEUE][MODE] OFF');
         }
       });
     }
@@ -79,6 +81,11 @@ Meteor.startup(function () {
     playerFullscreen : function(){
       console.log('[CALL] Fullscreen');
       cplayer.stdin.write('\nf\n');
+    },
+    getQueue : function(){
+      this.unblock();
+      console.log('query');
+      //return Queue.find({}).fetch()
     },
     addToPlaylist : function(searchQuery,data){
       //TODO do check if the video is allready in the playlist + 1 score
@@ -139,5 +146,4 @@ Meteor.startup(function () {
       }
     }
   });
-
 });
