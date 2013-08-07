@@ -1,8 +1,6 @@
 if (Meteor.isClient){
   var Playlist = new Meteor.Collection("playlist");
-  var Queue = new Meteor.Collection("queue");
   var Kouch = new Meteor.Collection("Kouch"); 
-}
   
 Template.remote.searchQueryResults = function () {
   return Session.get('q');
@@ -18,8 +16,9 @@ Template.remote.getPlaylist = function () {
 };
 
 Template.remote.events({
-  'click #search' : function (data) {
+  'keyup, click #search' : function (data) {
       var query = $('#query').val();
+      if (query.length >= 4) {
       console.log('[log][QUERY] '+query);
       check(query, String);
       var max_videos = 12;
@@ -48,6 +47,7 @@ Template.remote.events({
           Session.set("q",data);
           return true
         });
+      }      
   },
   'click .playStart' : function(data){
     //
@@ -57,15 +57,19 @@ Template.remote.events({
 
     console.log('[QUERY] ',query);
 
-    Meteor.call('addToPlaylist',query,this,function (error,results) {
+    Meteor.call('addToPlaylist',query,this,function (error,playlist) {
       if (data.toElement.dataset.id) {
-        console.log('[log][Playlist] '+ data.toElement.dataset.id,' [DB][RESULTS] ',results);
-        Meteor.call('parseWeb',data.toElement.dataset.id,results);
+        console.log('[log][Playlist] '+ data.toElement.dataset.id,' [DB][RESULTS] ',playlist);
+        Meteor.call('parseWeb',data.toElement.dataset.id,playlist._id);
       }else{
-        console.error('[log][addToPlaylist] no dataset set',results);
+        console.error('[log][addToPlaylist] no dataset set',playlist);
         //Meteor.call('parseWeb',data.toElement.dataset.id,results);
       }
     });
+  },
+  'click .del' :function(data){
+    console.log(this);
+    Meteor.call('delPlaylistEntry',this._id);
   },
   'click .mute' :function(data){
     //
@@ -134,3 +138,4 @@ Template.remote.events({
     Meteor.call('fullscreen');
   }
 });
+};

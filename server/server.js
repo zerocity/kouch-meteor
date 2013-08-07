@@ -1,59 +1,52 @@
 Meteor.startup(function () {
   var Fiber = Npm.require("fibers");
-
-  var cplayer;
   var cp = Npm.require('child_process');
+  var cplayer;
 
   var playerState = {
     play : false,
     mute : false,
-    queue : false
+    queue : false,
+    playerRun : false
   }
 
   var Kouch = new Meteor.Collection("Kouch"); 
   var Playlist = new Meteor.Collection("playlist");
-  var history = new Meteor.Collection("Histroy");
-
-  playerState.queue = true
 
   var NextQueue = function(){
     Fiber(function(){
+      //todo add position list
       var q = Playlist.find({}).fetch(); 
-      console.log(q.length);
 
       if (q.length != 0) {
-
-        console.log(q);
-
+        console.log(q.length);
         Playlist.remove(q[0]._id, function(){
-          console.log('Entry gelöscht',q[0]);
-          //Meteor.call('parseWeb',q[0].sourceUrl)            
+          console.log('Entry gelöscht ',q[0].title);
+          //Meteor.call('parseWeb',q[0].sourceUrl) 
+          //todo if youtube else ....            
           Meteor.call('parseWeb',q[0].youtubeId)            
         });
 
       }else{
+        //todo clean ..State.play to playerRun
         playerState.queue = false;
-        playerState.play == false;
+        playerState.play = false;
+        playerState.playerRun = false;
         console.log('[PlAYER][QUEUE][MODE] OFF');
       }
-      //Meteor.call('parseWeb',q[0].sourceUrl);
-      //console.log(playerState.play);
-      //Queue.remove(q._id)
-      //player(q[0].sourceUrl)
-      //return console.log(typeof q._id);
     }).run();
   }
-
-
   // Debuf mode for QUEUE
   //NextQueue();
 
+  var player = function(sourceUrl,playlistId) {
 
-  var player = function(sourceUrl) {
+    console.log('[ID] ',playlistId);
+
     if (playerState.play == false) {   
       cplayer = cp.spawn('mplayer',['-slave','-cache','4096','-fs',sourceUrl.trim()]);
       //var player = cp.spawn('omxplayer',[sourceUrl.trim()]);16384
-      console.log('[CALL][Player]');
+      console.log('[CALL][Player] ',sourceUrl);
       playerState.play = true;
 
       cplayer.stdout.on('data', function (data) {
@@ -63,17 +56,18 @@ Meteor.startup(function () {
 
       cplayer.on('close',function(data) {
         playerState.play = false;
-        console.log('[Player] close');
         if (playerState.queue == true) {
           console.log('[PlAYER][QUEUE] Start next Video');
-            NextQueue();
-          //removeQueue(next.id)
-          //player(next.sourceUrl)
+          NextQueue();
         }else{
+          playerState.queue = false;
+          playerState.play = false;
           console.log('[PlAYER][QUEUE][MODE] OFF');
+          console.log('[Player] close');
         }
       });
     }
+
   }
 
   Meteor.methods({
@@ -87,15 +81,18 @@ Meteor.startup(function () {
         console.log('[CALL][PlAYER] Mute OFF');
         playerState.mute = false
       }
-      //cplayer.stdin.write('\nosd_show_progression');
     },
     playerPause : function(){
       if (playerState.play == true) {
         console.log('[CALL][PlAYER] Pause');
         cplayer.stdin.write('\npause\n');
       }else{
-        console.log('[CALL][PlAYER] Play');
-        cplayer.stdin.write('\npause\n');
+        if (playerState.playerRun == false) {
+          NextQueue();
+        }else{
+          console.log('[CALL][PlAYER] Play');
+          cplayer.stdin.write('\npause\n');
+        }
       }
     },
     playerStop : function(){
@@ -127,6 +124,12 @@ Meteor.startup(function () {
       getQueue();
       //return Queue.find({}).fetch()
     },
+    delPlaylistEntry : function(id){
+      console.log('[DEL][ENTRY] ',id);
+      console.log(typeof id);
+      check(id, String)
+      Playlist.remove({_id:id});
+    },
     addToPlaylist : function(searchQuery,data){
       //TODO do check if the video is allready in the playlist + 1 score
       console.log('[CALL][ADDTOPLAYLIST][INSERT] '+searchQuery);
@@ -143,9 +146,6 @@ Meteor.startup(function () {
         duration:data.duration,
         date:Date.now()
       });
-
-
-
     },
     getPlaylist : function(){
       var pl = Playlist.find({}).fetch();   
@@ -168,7 +168,7 @@ Meteor.startup(function () {
        };
      });
     },  
-    parseWeb : function(sourceUrl) {
+    parseWeb : function(sourceUrl,playlistId) {
       if (playerState.play == true) {
         console.log('[CALL][INSERT][QUEUE] '+sourceUrl);
         Histroy.insert({sourceUrl:sourceUrl}); 
@@ -184,7 +184,7 @@ Meteor.startup(function () {
             }
           }else{
             if (stdout) {
-              player(stdout);
+              player(stdout,playlistId);
             }            
           }
 /*        if (error) {

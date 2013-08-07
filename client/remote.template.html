@@ -1,10 +1,10 @@
 <template name="remote">
 			
 			<ul class="padding-left padding-top padding-bottom nav nav-pills" data-pills="pills">
-			  <li  class="active" ><a href="#youtube" data-toggle="pill">Search</a></li>
+			  <li><a href="#youtube" data-toggle="pill">Search</a></li>
+			  <li><a href="#queue" data-toggle="pill">Queue</a></li>
 			  <li><a href="#playlist" data-toggle="pill">playlist</a></li>
 			  <li><a href="#remote" data-toggle="pill">remote</a></li>
-			  <li><a href="#url" data-toggle="pill">url</a></li>
 			</ul>
 			
 			{{#if state}}
@@ -25,8 +25,8 @@
 						</div>
 
 						<div class="video padding-left padding-top padding-bottomg " style="display: block;">
-							{{#if world}}	
-								{{#each world}}
+							{{#if searchQueryResults}}	
+								{{#each searchQueryResults}}
 								<div class="media">
 								  <a class="pull-left" href="#">
 								    <img class="media-object" style="width: 64px; height: 64px;" src="{{thumbnail}}">
@@ -46,11 +46,10 @@
 						</div>
 					</div>  	
 			  </div>
-				<!-- Playlist-->
-			  <div class="pill-pane" id="playlist">
+				<!-- Queue -->
+			  <div class="pill-pane" id="queue">
 					<!-- <a class="btn button btn-primary" id="kripp"><span class="glyphicon glyphicon-play"></span> kripp</a> -->
-			  	<div class="playlist">
-
+			  	<div class="queue">
 
 						<div class="video padding-left padding-top padding-bottomg " style="display: block;">
 							{{#if getPlaylist}}	
@@ -61,7 +60,8 @@
 								  </a>
 								  <div class="media-body">
 								    <h4 class="media-heading">{{title}}</h4>
-								    <a class="btn button btn-primary playStart" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{youtubeId}}"><span class="glyphicon glyphicon-share"></span> Play</a>
+								    <a class="btn btn-primary btn-xs playStart" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{youtubeId}}"><span class="glyphicon glyphicon-play"></span> Play</a>
+								    <a class="btn btn-primary btn-xs del" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{youtubeId}}"><span class="glyphicon glyphicon-remove-sign"></span></a>
 								  </div>
 								</div>
 									<p>{{title.$t}}</p>
@@ -74,7 +74,6 @@
 									<!-- ### Results will be append here ###  -->
 			  	</div>
 			  </div>
-
 			  	<!-- Remote control / mplayer-->
 			  <div class="pill-pane" id="remote">
 					<div class="padding-left padding-right padding-top btn-group btn-group-justified ">
@@ -90,12 +89,9 @@
 						<a class="btn button btn-primary mute" ><span class="glyphicon glyphicon-volume-off"></span> </a>
 						<a class="btn button btn-primary vol-up" ><span class="glyphicon glyphicon-volume-up"></span></a>
 		      </div>
-
-
-
 			  </div>
-				<!-- fetch url video / stream-->
-			  <div class="pill-pane" id="url">
+				<!-- Playlist-->
+			  <div class="pill-pane" id="playlist">
 		  		<div class="row">
 						<div class="padding-left padding-right input-group">
 						  <input type="text" class="form-control" placeholder="url">
@@ -108,4 +104,6 @@
 						</div>
 					</div>
 				</div>
+				<!-- fetch url video / stream-->
+
 </template>
