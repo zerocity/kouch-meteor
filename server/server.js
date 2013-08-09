@@ -99,6 +99,12 @@ Meteor.startup(function () {
       console.log('[CALL][PlAYER] Stop');
       cplayer.stdin.write('\nstop\n');
     },
+    'volume' : function(slider){
+        console.log('[CALL][PlAYER] Vol set to:',slider);
+        cplayer.stdin.write('\nvolume '+slider +' 1\n');
+        console.log(playerState);
+      //cplayer.stdin.write('\nvolume 10\n');      
+    },
     volDown : function(){
       console.log('[CALL][PlAYER] Vol Down');
       cplayer.stdin.write('\nvolume -10\n');
@@ -171,7 +177,7 @@ Meteor.startup(function () {
     parseWeb : function(sourceUrl,playlistId) {
       if (playerState.play == true) {
         console.log('[CALL][INSERT][QUEUE] '+sourceUrl);
-        Histroy.insert({sourceUrl:sourceUrl}); 
+        Playlist.insert({sourceUrl:sourceUrl}); 
         playerState.queue = true    
       }else{
         console.log('[CALL][Parse]' + sourceUrl);

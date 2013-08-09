@@ -4,7 +4,23 @@
 </head>
 
 <body>
-	<div class="container">
-		{{> remote}}			
-	</div>
 </body>
+
+
+<template name="layout">
+	<div class="container">
+	
+	<ul class="list-inline">
+		<li><a href="/search/" class="btn button">Search</a></li>
+		<li><a href="/playlist/" class="btn button">Playlist</a></li>
+		<li><a href="/queue/" class="btn button">queue</a></li>
+		<li><a href="/remote/" class="btn button">Remote</a></li>
+	</ul>
+
+		<div class="main">
+	  	{{{yield}}}			
+		</div>
+
+	</div>
+</template>
+

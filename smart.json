@@ -2,6 +2,7 @@
   "packages": {
     "npm": {},
     "router": {},
-    "bootstrap-3": {}
+    "bootstrap-3": {},
+    "mini-pages": {}
   }
 }

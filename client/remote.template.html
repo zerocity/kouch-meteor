@@ -1,109 +1,25 @@
 <template name="remote">
-			
-			<ul class="padding-left padding-top padding-bottom nav nav-pills" data-pills="pills">
-			  <li><a href="#youtube" data-toggle="pill">Search</a></li>
-			  <li><a href="#queue" data-toggle="pill">Queue</a></li>
-			  <li><a href="#playlist" data-toggle="pill">playlist</a></li>
-			  <li><a href="#remote" data-toggle="pill">remote</a></li>
-			</ul>
-			
-			{{#if state}}
-			<div class="well">
-				<p>{{state}}</p>				
-			</div>
-			{{/if}}
-			
-			<div class="pill-content">
-				<!-- YOUTUBE SEARCH-->
-			  <div class="pill-pane active" id="youtube">
-					<div class="row">
-						<div class="padding-left padding-right input-group">
-						  <input id="query" type="text" class="form-control" placeholder="url / search">
-							<div class="input-group-btn ">
-								<a class="btn button btn-primary" id="search">Youtube Search <span class="glyphicon glyphicon-play"></span></a>
-		          </div>
-						</div>
 
-						<div class="video padding-left padding-top padding-bottomg " style="display: block;">
-							{{#if searchQueryResults}}	
-								{{#each searchQueryResults}}
-								<div class="media">
-								  <a class="pull-left" href="#">
-								    <img class="media-object" style="width: 64px; height: 64px;" src="{{thumbnail}}">
-								  </a>
-								  <div class="media-body">
-								    <h4 class="media-heading">{{title}}</h4>
-								    <a class="btn button btn-primary playStart" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{youtubeId}}"><span class="glyphicon glyphicon-play"></span> Play</a>
-								  </div>
-								</div>
-									<p>{{title.$t}}</p>
-									<hr>
-						  	{{/each}}
-							{{else}}
-								<p>ne doch net</p>
-							{{/if}}
-									<!-- ### Results will be append here ###  -->
-						</div>
-					</div>  	
-			  </div>
-				<!-- Queue -->
-			  <div class="pill-pane" id="queue">
-					<!-- <a class="btn button btn-primary" id="kripp"><span class="glyphicon glyphicon-play"></span> kripp</a> -->
-			  	<div class="queue">
-
-						<div class="video padding-left padding-top padding-bottomg " style="display: block;">
-							{{#if getPlaylist}}	
-								{{#each getPlaylist}}
-								<div class="media">
-								  <a class="pull-left" href="#">
-								    <img class="media-object" style="width: 64px; height: 64px;" src="{{thumbnail}}">
-								  </a>
-								  <div class="media-body">
-								    <h4 class="media-heading">{{title}}</h4>
-								    <a class="btn btn-primary btn-xs playStart" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{youtubeId}}"><span class="glyphicon glyphicon-play"></span> Play</a>
-								    <a class="btn btn-primary btn-xs del" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{youtubeId}}"><span class="glyphicon glyphicon-remove-sign"></span></a>
-								  </div>
-								</div>
-									<p>{{title.$t}}</p>
-									<hr>
-						  	{{/each}}
-							{{else}}
-								<p>ne doch net</p>
-							{{/if}}
-						</div>			  		
-									<!-- ### Results will be append here ###  -->
-			  	</div>
-			  </div>
-			  	<!-- Remote control / mplayer-->
-			  <div class="pill-pane" id="remote">
-					<div class="padding-left padding-right padding-top btn-group btn-group-justified ">
-		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-fast-backward"></span></a>
-		        <a href="#" class="btn btn-default left"><span class="glyphicon glyphicon-backward"></span></a>
-		        <a href="#" class="btn btn-default pause"><span class="glyphicon glyphicon-play"><span class="glyphicon glyphicon-pause"></span></a>
-		        <a href="#" class="btn btn-default stop"><span class="glyphicon glyphicon-stop"></span></a>
-		        <a href="#" class="btn btn-default right"><span class="glyphicon glyphicon-forward"></span></a>
-		        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-fast-forward"></span></a>
-		      </div>
-		      <div class="padding-left padding-right padding-top btn-group btn-group-justified ">
-						<a class="btn button btn-primary vol-down" ><span class="glyphicon glyphicon-volume-down"></span></a>
-						<a class="btn button btn-primary mute" ><span class="glyphicon glyphicon-volume-off"></span> </a>
-						<a class="btn button btn-primary vol-up" ><span class="glyphicon glyphicon-volume-up"></span></a>
-		      </div>
-			  </div>
-				<!-- Playlist-->
-			  <div class="pill-pane" id="playlist">
-		  		<div class="row">
-						<div class="padding-left padding-right input-group">
-						  <input type="text" class="form-control" placeholder="url">
-							<div class="input-group-btn ">
-		              <button type="button" class="btn btn-default" tabindex="-1">go</button>
-		          </div>
-						</div>
-						<div class="video padding-left padding-top padding-bottomg " style="display: block;">
-							<!-- ### Results will be append here ###  -->
-						</div>
-					</div>
-				</div>
-				<!-- fetch url video / stream-->
+  <div class="btn-group">
+	   <div class="padding-left padding-right padding-top btn-group btn-group-justified ">
+      <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-fast-backward"></span></a>
+      <a href="#" class="btn btn-default left"><span class="glyphicon glyphicon-backward"></span></a>
+      <a href="#" class="btn btn-default pause"><span class="glyphicon glyphicon-play"></span><span class="glyphicon glyphicon-pause"></span></a>
+      <a href="#" class="btn btn-default stop"><span class="glyphicon glyphicon-stop"></span></a>
+      <a href="#" class="btn btn-default right"><span class="glyphicon glyphicon-forward"></span></a>
+      <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-fast-forward"></span></a>
+    </div>
+  </div>
+  <div class="padding-left padding-right padding-top btn-group btn-group-justified ">
+    <div class="btn-group">
+  		<a class="btn button btn-primary vol-down" ><span class="glyphicon glyphicon-volume-down"></span></a>
+  		<a class="btn button btn-primary mute" ><span class="glyphicon glyphicon-volume-off"></span> </a>
+  		<a class="btn button btn-primary vol-up" ><span class="glyphicon glyphicon-volume-up"></span></a>
+    </div>
+  </div>
+  <div class="volslider">
+  <p>Volume</p>
+      <input class= "progress" type="range" name="slider" id="slider" value="0" min="0" max="100"  />
+  </div>
 
 </template>
