@@ -173,6 +173,11 @@ Meteor.startup(function () {
           cplayer.stdin.write('\nf');
        };
      });
+    },
+    eventTest : function(slider) {
+      console.log('test');
+        cplayer.stdin.write('\nvolume '+slider +' 1\n');
+      console.log('test');
     },  
     parseWeb : function(sourceUrl,playlistId) {
       if (playerState.play == true) {

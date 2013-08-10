@@ -21,4 +21,9 @@
 
 .progress{
 	width: 95%;
+	height: 30px;
+}
+
+.container{
+	padding: 5px;
 }

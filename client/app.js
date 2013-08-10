@@ -90,19 +90,14 @@ if (Meteor.isClient){
       //
       // ##### parseWeb
       //
-      var query = $('#query').val();
 
-      console.log('[QUERY] ',query);
-
-      Meteor.call('addToPlaylist',query,this,function (error,playlist) {
         if (data.toElement.dataset.id) {
-          console.log('[log][Playlist] '+ data.toElement.dataset.id,' [DB][RESULTS] ',playlist);
-          Meteor.call('parseWeb',data.toElement.dataset.id,playlist._id);
+          console.log('[Q][play] '+ data.toElement.dataset.id);
+          Meteor.call('parseWeb',data.toElement.dataset.id);
         }else{
           console.error('[log][addToPlaylist] no dataset set',playlist);
-          //Meteor.call('parseWeb',data.toElement.dataset.id,results);
         }
-      });
+  
     },
     'click .del' :function(data){
         console.log(this);
@@ -183,14 +178,10 @@ if (Meteor.isClient){
       check(event.toElement.valueAsNumber,Number)
       Meteor.call('volume',event.toElement.valueAsNumber)
     },
-    'focus .progress':function(){console.log('focus');},
-    'change .progress':function(event){
-      //Meteor.call('volume',event.toElement.valueAsNumber)
-    },
-    'mouseup .progress':function(event){
-      check(event.toElement.valueAsNumber,Number)
-      Meteor.call('volume',event.toElement.valueAsNumber)
-    },
-    'keypress .progress':function(){console.log('keypress');}
+    'change .progress':function(){
+      var mchange = $('.progress').val();
+      console.log(mchange);
+      Meteor.call('eventTest',mchange);
+    }
   });
 };
