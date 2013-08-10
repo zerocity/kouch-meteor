@@ -1,52 +1,77 @@
 Meteor.startup(function () {
-  var Fiber = Npm.require("fibers");
-  var cp = Npm.require('child_process');
-  var cplayer;
+  var Fiber = Npm.require("fibers")
+    , cp = Npm.require('child_process')
+    , cplayer
+    , playerState = {
+        play : false,
+        mute : false,
+        queue : false,
+        playerRun : false
+      }
+    , Kouch = new Meteor.Collection("Kouch") 
+    , Playlist = new Meteor.Collection("playlist");
 
-  var playerState = {
-    play : false,
-    mute : false,
-    queue : false,
-    playerRun : false
+
+  if (Kouch.find().count() === 0) {
+    var jsonQueue = {
+      currentPosition :''
+    }
+    Kouch.insert(jsonQueue);
+    console.log('[CREATE] kk');
+    var kkId = Kouch.findOne({});
+  }else{
+    var kkId = Kouch.findOne({});
   }
 
-  var Kouch = new Meteor.Collection("Kouch"); 
-  var Playlist = new Meteor.Collection("playlist");
-
-  var NextQueue = function(){
+  var NextQueue = function(playlistId){
     Fiber(function(){
       //todo add position list
-      var q = Playlist.find({}).fetch(); 
+      var kkId = Kouch.find({}).fetch()[0];
+      console.log('[KKID][OLD][POSITION] ',kkId.currentPosition, Date());
 
-      if (q.length != 0) {
-        console.log(q.length);
-        Playlist.remove(q[0]._id, function(){
-          console.log('Entry gelöscht ',q[0].title);
-          //Meteor.call('parseWeb',q[0].sourceUrl) 
-          //todo if youtube else ....            
-          Meteor.call('parseWeb',q[0].youtubeId)            
-        });
-
+      if (typeof playlistId != 'undefined') {
+        var next = kkId.playlist[kkId.playlist.indexOf(playlistId) + 1]; 
       }else{
-        //todo clean ..State.play to playerRun
+        console.log('[LOG]','no playlistid defined');
+/*      console.log(Kouch.find({}).fetch()[0].currentPosition);
+        console.log(kkId);
+        console.log(kkId.currentPosition);*/
+        var next =  kkId.playlist[kkId.playlist.indexOf(kkId.currentPosition) + 1];
+      }
+
+      if (typeof next !== 'undefined'){
+        console.log('[NEXT]',next);
+        Kouch.update({'_id':kkId._id},{ $set :{'currentPosition':next}});
+        //console.log(Kouch.find({}).fetch()[0]);
+        Meteor.call('parseWeb',next)
+      }else{
         playerState.queue = false;
         playerState.play = false;
         playerState.playerRun = false;
-        console.log('[PlAYER][QUEUE][MODE] OFF');
-      }
+        console.log('[PlAYER][QUEUE][MODE] OFF');        
+      }    
     }).run();
   }
   // Debuf mode for QUEUE
-  //NextQueue();
+
+  //Kouch.update(kkId,{'$set':{currentPosition:'paNRbxEgyCNoxFWRa'}});
+  playerState.queue = true;
+  NextQueue();
+
+  var getKouch = function(){
+    Fiber(function(){
+      var kkId = Kouch.find().fetch()[0]
+      console.log('[FIND][Kouch] ',kkId);
+    }).run();
+  }
 
   var player = function(sourceUrl,playlistId) {
 
-    console.log('[ID] ',playlistId);
+    if (playerState.play == false) {
 
-    if (playerState.play == false) {   
       cplayer = cp.spawn('mplayer',['-slave','-cache','4096','-fs',sourceUrl.trim()]);
-      //var player = cp.spawn('omxplayer',[sourceUrl.trim()]);16384
-      console.log('[CALL][Player] ',sourceUrl);
+      
+      console.log('[CALL][Player] ');//,sourceUrl);
       playerState.play = true;
 
       cplayer.stdout.on('data', function (data) {
@@ -58,7 +83,7 @@ Meteor.startup(function () {
         playerState.play = false;
         if (playerState.queue == true) {
           console.log('[PlAYER][QUEUE] Start next Video');
-          NextQueue();
+          NextQueue(playlistId);
         }else{
           playerState.queue = false;
           playerState.play = false;
@@ -71,6 +96,30 @@ Meteor.startup(function () {
   }
 
   Meteor.methods({
+    addToQueue : function(searchQuery,entry){
+      console.log('\n[CALL][ADD][TO]QUEUE][INSERT] ',searchQuery);
+      var pl = Playlist.insert({searchQuery:searchQuery,
+        youtubeId:entry.youtubeId,
+        title:entry.title,
+        thumbnail:entry.thumbnail,
+        description:entry.description,
+        duration:entry.duration,
+        date:Date.now(),
+        isPlaying:false
+      });
+
+      Kouch.update(kkId,{'$push':{ 'playlist':pl}}); 
+
+      return pl
+
+    },
+    queueMode : function(){
+      if (playerState.queue == false) {
+        playerState.queue = true;
+      }else{
+        playerState.queue = false
+      }
+    },
     playerMute : function(){
       if (playerState.mute == false) {
         playerState.mute = true
@@ -178,33 +227,47 @@ Meteor.startup(function () {
       console.log('test');
         cplayer.stdin.write('\nvolume '+slider +' 1\n');
       console.log('test');
-    },  
-    parseWeb : function(sourceUrl,playlistId) {
-      if (playerState.play == true) {
+    }, 
+    getPlayerState : function(){
+      return playerState;
+    },
+    setPlayerState : function(key,value){
+      console.log(playerState[key])
+      console.log('[NEW][value] ',value);
+    },
+    parseWeb : function(playlistId) {
+      if (playerState.playerRun == true) {
+/*        playerState.queue = true    
         console.log('[CALL][INSERT][QUEUE] '+sourceUrl);
-        Playlist.insert({sourceUrl:sourceUrl}); 
-        playerState.queue = true    
+        Playlist.insert({sourceUrl:sourceUrl}); */
       }else{
-        console.log('[CALL][Parse]' + sourceUrl);
-        cp.exec('youtube-dl -g -f 34/35/45/84 '+sourceUrl.toString(),function (error, stdout, stderr,stdin) {
-          // parameter bug
-          // -f choise prefeard video format http://en.wikipedia.org/wiki/YouTube#Quality_and_codecs
-          if (error) {
-            if (error.code) {
-              console.log(error.code);
+        if (typeof playlistId !== "undefined") {
+          console.log('[CALL][Parse]' + playlistId);
+          var sourceUrl = Playlist.findOne({'_id':playlistId}).youtubeId
+          console.log('[SOURCE]',sourceUrl);
+          cp.exec('youtube-dl -g -f 34/35/45/84/102 '+sourceUrl.toString(),function (error, stdout, stderr,stdin) {
+            // parameter bug
+            // -f choise prefeard video format http://en.wikipedia.org/wiki/YouTube#Quality_and_codecs
+            if (error) {
+              if (error.code) {
+                console.log('[CODEX ERROR] ',error.code);
+                cplayer.stdin.write('\nstop\n');
+              }
+            }else{
+              if (stdout) {
+                player(stdout,playlistId);
+              }            
             }
-          }else{
-            if (stdout) {
-              player(stdout,playlistId);
-            }            
-          }
-/*        if (error) {
-          console.log(error.stack);
-          console.log('Error code: '+error.code);
-          console.log('Signal received: '+error.signal);
-        }*/      
-       });
-    
+  /*        if (error) {
+            console.log(error.stack);
+            console.log('Error code: '+error.code);
+            console.log('Signal received: '+error.signal);
+          }*/      
+         });
+        }else{ 
+          console.log(playlistId);
+
+        };   
       }
     }
   });
