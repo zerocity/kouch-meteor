@@ -1,0 +1,32 @@
+<template name="queue">
+
+	<div class="queue">
+
+		<div class="video padding-left padding-top padding-bottomg " style="display: block;">
+			{{#if getPlaylist}}	
+				{{#each getPlaylist}}
+				<div class="media">
+				  <a class="pull-left" href="#">
+				    <img class="media-object" style="width: 64px; height: 64px;" src="{{thumbnail}}">
+				  </a>
+				  <div class="media-body">
+				    <h4 class="media-heading">{{title}}</h4>
+				    <a href="#" class="btn btn-primary btn-xs playStart" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{youtubeId}}">
+				    	<span class="glyphicon glyphicon-play"></span> Play
+				    </a>
+				    <a href="#" class="btn btn-primary btn-xs del" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{youtubeId}}">
+				    	<span class="glyphicon glyphicon-remove-sign"></span>
+				    </a>
+				  </div>
+				</div>
+					<p>{{title.$t}}</p>
+					<hr>
+		  	{{/each}}
+			{{else}}
+				<p>ne doch net</p>
+			{{/if}}
+		</div>			  		
+					<!-- ### Results will be append here ###  -->
+	</div>
+
+</template>

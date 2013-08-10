@@ -1,0 +1,34 @@
+<template name="search">
+	<div class="row">
+		<div class="padding-left padding-right input-group">
+		  <input id="query" type="text" class="form-control" placeholder="url / search">
+			<div class="input-group-btn ">
+				<a class="btn button btn-primary" id="search">Youtube Search <span class="glyphicon glyphicon-play"></span></a>
+      </div>
+		</div>
+
+		<div class="video padding-left padding-top padding-bottomg " style="display: block;">
+			{{#if searchQueryResults}}	
+				{{#each searchQueryResults}}
+				<div class="media">
+				  <a class="pull-left" href="#">
+				    <img class="media-object" style="width: 64px; height: 64px;" src="{{thumbnail}}">
+				  </a>
+				  <div class="media-body">
+				    <h4 class="media-heading">{{title}}</h4>
+				    <a href="#" class="btn button btn-primary addToQueue" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{youtubeId}}"><span class="glyphicon glyphicon-plus"></span>
+				    </a>
+				    <a href="#" class="btn button btn-primary addToQueue" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{youtubeId}}"><span class="glyphicon glyphicon-play"></span>
+				    </a>
+				  </div>
+				</div>
+					<p>{{title.$t}}</p>
+					<hr>
+		  	{{/each}}
+			{{else}}
+				<p>ne doch net</p>
+			{{/if}}
+					<!-- ### Results will be append here ###  -->
+		</div>
+	</div>  
+</template>
