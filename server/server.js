@@ -3,6 +3,7 @@ Meteor.startup(function () {
     , cp = Npm.require('child_process')
     , cplayer
     , playerState = {
+        skip : false, 
         play : false,
         mute : false,
         queue : false,
@@ -25,6 +26,32 @@ Meteor.startup(function () {
     //console.log('[QUEUE][CURRENT]\n',kkId.playlist);
   }
 
+  var updateIsPlaying  =function(nextPlaylistId){
+    Fiber(function(){
+      var kkId = Kouch.find({}).fetch()[0];
+      Playlist.update({'_id':kkId.currentPosition},{ $set :{'isPlaying':false}});
+      Kouch.update({'_id':kkId._id},{ $set :{'currentPosition':nextPlaylistId}});
+      Playlist.update({'_id':nextPlaylistId},{ $set :{'isPlaying':true}});
+      console.log('[UPDATE][ISPLAYING]');    
+    }).run();
+  }
+
+  var skipVideo = function(playlistId,queue){
+    Fiber(function(){
+      if (queue) {
+        playerState.skip = true
+        playerState.queue = false
+        console.log('[SKIP][QUEUE] ',playlistId);
+        Meteor.call('playerStop');
+        Meteor.call('parseWeb',playlistId)
+      }else{
+        console.log('[SKIP] ',playlistId);
+        Meteor.call('playerStop');
+        Meteor.call('parseWeb',playlistId)
+      }
+    }).run();
+  }
+
   var NextQueue = function(playlistId){
     Fiber(function(){
       //todo add position list
@@ -32,15 +59,9 @@ Meteor.startup(function () {
       console.log('[KKID][OLD][POSITION] ',kkId.currentPosition, Date());
       
       if (typeof playlistId != 'undefined') {
-
         var next = kkId.playlist[kkId.playlist.indexOf(playlistId) + 1]; 
-
       }else{
-
         console.log('[LOG]','no playlistid defined',Kouch.find({}).fetch()[0].currentPosition);
-/*      console.log(Kouch.find({}).fetch()[0].currentPosition);
-        console.log(kkId);
-        console.log(kkId.currentPosition);*/
         var currentPosition = Kouch.find({}).fetch()[0].currentPosition
         if (currentPosition != ''){
           var next =  kkId.playlist[kkId.playlist.indexOf(currentPosition) + 1];
@@ -50,11 +71,7 @@ Meteor.startup(function () {
       }
       if (typeof next != undefined){
         console.log('[NEXT]',next);
-        Playlist.update({'_id':kkId.currentPosition},{ $set :{'isPlaying':false}});
-        Kouch.update({'_id':kkId._id},{ $set :{'currentPosition':next}});
-        Playlist.update({'_id':next},{ $set :{'isPlaying':true}});
-
-        //console.log(Kouch.find({}).fetch()[0]);
+        updateIsPlaying(next)
         Meteor.call('parseWeb',next)
       }else{
         playerState.queue = false;
@@ -78,16 +95,14 @@ Meteor.startup(function () {
   }
 
   var player = function(sourceUrl,playlistId) {
-
+    updateIsPlaying(playlistId);
     if (playerState.play == false) {
-
-      cplayer = cp.spawn('mplayer',['-slave','-cache','4096','-fs',sourceUrl.trim()]);
-      
+      cplayer = cp.spawn('mplayer',['-slave','-cache','4096','',sourceUrl.trim()]);     //-fs
       console.log('[CALL][Player] ');//,sourceUrl);
       playerState.play = true;
 
       cplayer.stdout.on('data', function (data) {
-        console.log('[CALL][MPlayer]\n' +data);
+        //console.log('[CALL][MPlayer]\n' +data);
         //send commands //player.stdin.write('\nmute\n')
       });
 
@@ -95,7 +110,7 @@ Meteor.startup(function () {
         playerState.play = false;
         if (playerState.queue == true) {
           console.log('[PlAYER][QUEUE] Start next Video');
-          NextQueue(playlistId);
+          NextQueue(playlistId);            
         }else{
           playerState.queue = false;
           playerState.play = false;
@@ -121,9 +136,7 @@ Meteor.startup(function () {
       });
 
       Kouch.update(kkId,{'$push':{ 'playlist':pl}}); 
-
       return pl
-
     },
     queueMode : function(){
       if (playerState.queue == false) {
@@ -254,14 +267,17 @@ Meteor.startup(function () {
        return pla
     },
     parseWeb : function(playlistId) {
-      if (playerState.playerRun == true) {
+      console.log(playerState);
+      if (playerState.play == true) {
         console.log('[CALL][NEW][VIDEO] ',playlistId);
-        playerState.playerRun = false
-        cplayer.stdin.write('\nstop\n');
-        Meteor.call('parseWeb',playlistId);
-/*      playerState.queue = true    
-        console.log('[CALL][INSERT][QUEUE] '+sourceUrl);
-        Playlist.insert({sourceUrl:sourceUrl}); */
+        if (playerState.queue) {
+          console.log('[In queue mode]');        
+          skipVideo(playlistId,true);
+        }else{
+          playerState.play = false;
+          skipVideo(playlistId,false);
+        }
+
       }else{
         if (typeof playlistId !== "undefined") {
           console.log('[CALL][Parse]' + playlistId);
@@ -277,6 +293,11 @@ Meteor.startup(function () {
               }
             }else{
               if (stdout) {
+                if (playerState.skip == true) {
+                  playerState.skip = false
+                  playerState.queue = true
+                }
+
                 player(stdout,playlistId);
               }            
             }

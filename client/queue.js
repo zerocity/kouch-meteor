@@ -13,17 +13,12 @@ Template.queue.meteorstatus = function () {
 Template.queue.getPlaylist = function () {
   var queue = Kouch.find({}).fetch()[0]
 
-  if (typeof queue.playlist != undefined) {
-    var pla = Playlist.find({
+  if (typeof queue.playlist == 'object' ) {
+    var pl =  Playlist.find({
       '_id': { $in : queue.playlist }
     }).fetch();
-    return pla
-  }else{
-    //bug somethimes Playlist cant be loaded ...
-    return Playlist.find({}).fetch();
-  }
-
-  //var pl = Playlist.find({'_id':queue[0]}).fetch()
+    return pl 
+  };
 
 };
 
