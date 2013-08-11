@@ -35,8 +35,8 @@ Template.search.events({
             return true
           });
       }      
-    },  
-    'click .addToPlaylist' : function(data){
+  },  
+  'click .addToPlaylist' : function(data){
     //
     // ##### parseWeb
     //
@@ -46,8 +46,17 @@ Template.search.events({
     Meteor.call('addToPlaylist',query,this,function(err,res){
       console.log('[ADD][TO][QUEUE] ',res);
     });
+  },
+  'click .play' : function(data){
+    var query = $('#query').val();
+    console.log('[QUERY] ',query);
 
-
+    var video = Meteor.call('addToPlaylist',query,this,function(err,res){
+      console.log('[ADD][TO][QUEUE] and play ',res);
+      Meteor.call('parseWeb',res);
+    });
+  }
+});
 /*    Meteor.call('addToPlaylist',query,this,function (error,playlist) {
       if (data.toElement.dataset.id) {
         console.log('[log][Playlist] '+ data.toElement.dataset.id,' [DB][RESULTS] ',playlist);
@@ -57,10 +66,3 @@ Template.search.events({
         //Meteor.call('parseWeb',data.toElement.dataset.id,results);
       }
     });*/
-
-
-  }
-
-
-
-});

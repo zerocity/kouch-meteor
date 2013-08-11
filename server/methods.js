@@ -12,6 +12,7 @@ Meteor.methods({
     });
 
     Kouch.update(kkId,{'$push':{ 'playlist':pl}}); 
+    console.log(Kouch.findOne());
     return pl
   },
   queueMode : function(){
@@ -35,10 +36,19 @@ Meteor.methods({
     //return Queue.find({}).fetch()
   },
   delPlaylistEntry : function(id){
-    l('[DEL][ENTRY] ',id);
-    l(typeof id);
+    l('\n[DEL][ENTRY] ',id);
     check(id, String)
-    Playlist.remove({_id:id});
+
+    var kk = Kouch.findOne({})
+    var pos = kk.playlist.indexOf(id)
+
+    kk.playlist.splice(pos,1)
+   
+    /*console.log('POS',pos);
+    console.log('OLD',kk.playlist);
+    console.log('new',kk.playlist);*/
+    Kouch.update({'_id':kk._id},{ $set :{'playlist':kk.playlist}});
+
   },
   getPlaylist : function(){
     var pl = Playlist.find({}).fetch();   

@@ -11,6 +11,7 @@ Template.queue.meteorstatus = function () {
 };
 
 Template.queue.getPlaylist = function () {
+  console.log(Meteor.status());
   var queue = Kouch.find({}).fetch()[0]
 
   if (typeof queue.playlist == 'object' ) {
