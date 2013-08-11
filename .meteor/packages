@@ -7,5 +7,4 @@ insecure
 preserve-inputs
 http
 jquery
-appcache
 autopublish

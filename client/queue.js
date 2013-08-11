@@ -11,16 +11,17 @@ Template.queue.meteorstatus = function () {
 };
 
 Template.queue.getPlaylist = function () {
-  console.log(Meteor.status());
-  var queue = Kouch.find({}).fetch()[0]
-
-  if (typeof queue.playlist == 'object' ) {
-    var pl =  Playlist.find({
-      '_id': { $in : queue.playlist }
-    }).fetch();
-    return pl 
+  if (Meteor.status().status == 'connecting') {
+    return 'Loading ...'
+  }else{
+    var queue = Kouch.find({}).fetch()[0]
+    if (typeof queue != 'undefined' ) {   
+      var pl =  Playlist.find({
+       '_id': { $in : queue.playlist }
+      }).fetch();
+      return pl 
+    };
   };
-
 };
 
 Template.queue.events({

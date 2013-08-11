@@ -1,6 +1,5 @@
 Meteor.methods({
   addToPlaylist : function(searchQuery,entry){
-    l('\n[CALL][ADD][TO]QUEUE][INSERT] ',searchQuery)
     var pl = Playlist.insert({searchQuery:searchQuery,
       youtubeId:entry.youtubeId,
       title:entry.title,
@@ -10,9 +9,8 @@ Meteor.methods({
       date:Date.now(),
       isPlaying:false
     });
-
-    Kouch.update(kkId,{'$push':{ 'playlist':pl}}); 
-    console.log(Kouch.findOne());
+    l('\n[CALL][ADD][TO]QUEUE][INSERT] ',pl)
+    Kouch.update({'_id':kkId._id},{'$push':{ 'playlist':pl}});    
     return pl
   },
   queueMode : function(){
@@ -84,7 +82,6 @@ Meteor.methods({
      return pla
   },
   parseWeb : function(playlistId) {
-    l(playerState);
     if (playerState.play == true) {
       l('[CALL][NEW][VIDEO] ',playlistId);
       if (playerState.queue) {
@@ -94,7 +91,6 @@ Meteor.methods({
         playerState.play = false;
         skipVideo(playlistId,false);
       }
-
     }else{
       if (typeof playlistId !== "undefined") {
         var sourceUrl = Playlist.findOne({'_id':playlistId}).youtubeId
