@@ -11,9 +11,6 @@ Meteor.startup(function () {
   }
   Fiber = Npm.require("fibers");
 
-
-  console.log(Kouch.findOne({}));
-
   // Debuf mode for QUEUE
 
   //Kouch.update(kkId,{'$set':{currentPosition:'paNRbxEgyCNoxFWRa'}});
@@ -26,7 +23,5 @@ Meteor.startup(function () {
       console.log('[FIND][Kouch] ',kkId);
     }).run();
   }*/
-
-
 
 });

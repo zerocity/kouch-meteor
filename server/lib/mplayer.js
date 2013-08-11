@@ -1,7 +1,7 @@
 player = function(sourceUrl,playlistId) {
   updateIsPlaying(playlistId);
   if (playerState.play == false) {
-    cplayer = cp.spawn('mplayer',['-slave','-cache','4096','',sourceUrl.trim()]);     //-fs
+    cplayer = cp.spawn('mplayer',['-slave','-cache','4096','-fs',sourceUrl.trim()]);     //-fs
     console.log('[CALL][Player] ');//,sourceUrl);
     playerState.play = true;
 

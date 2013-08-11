@@ -3,7 +3,7 @@ Meteor.pages({
   '/queue': { to: 'queue', as: 'root', nav: 'queue' },
   '/search': { to: 'search', nav: 'search' },
   '/remote': { to: 'remote', nav: 'remote' },
-  '/playlist': { to: 'playlist', nav: 'playlist' }
+  '/history': { to: 'history', nav: 'history' }
 }, {
   // optional options to pass to the PageRouter
   defaults: {

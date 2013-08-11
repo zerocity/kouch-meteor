@@ -8,8 +8,8 @@ skipVideo = function(playlistId,queue){
       Meteor.call('playerStop');
       Meteor.call('parseWeb',playlistId)
     }else{
-      console.log('[SKIP] ',playlistId);
       Meteor.call('playerStop');
+      console.log('[SKIP] ',playlistId);
       Meteor.call('parseWeb',playlistId)
     }
   }).run();

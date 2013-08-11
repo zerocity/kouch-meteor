@@ -1,27 +1,12 @@
-/*Deps.autorun(function () {
-  Meteor.subscribe("queue"));
-});
-*/
-
-Template.queue.meteorstatus = function () {
+Template.history.meteorstatus = function () {
   return Meteor.status().connected;
 };
 
-Template.queue.getPlaylist = function () {
-  if (Meteor.status().status == 'connecting') {
-    return 'Loading ...'
-  }else{
-    var queue = Kouch.find({}).fetch()[0]
-    if (typeof queue != 'undefined' ) {   
-      var pl =  Playlist.find({
-       '_id': { $in : queue.playlist }
-      }).fetch();
-      return pl 
-    };
-  };
+Template.history.list = function () {
+  return Playlist.find({},{ sort :{'date':-1}});
 };
 
-Template.queue.events({
+Template.history.events({
   'click .playStart' : function(event){
     //
     // ##### parseWeb

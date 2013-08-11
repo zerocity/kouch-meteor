@@ -57,7 +57,7 @@ Meteor.methods({
     }
   },
   playerStop : function(){
-    if (playerState.play) {
+    if (playerState.play == false) {
       console.log('[CALL][PlAYER] Stop');
       cplayer.stdin.write('\nstop\n');
     }

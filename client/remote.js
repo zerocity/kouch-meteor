@@ -2,6 +2,9 @@ if (Meteor.isClient){
   //var Playlist = new Meteor.Collection("playlist");
 
   Template.remote.events({
+    'click .toggle-sound' : function(event){
+      $('.volslider').toggleClass('hide');
+    },
     'click .backward':function(event){
       Meteor.call('backward');
     },
