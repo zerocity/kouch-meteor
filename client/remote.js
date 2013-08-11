@@ -2,8 +2,14 @@ if (Meteor.isClient){
   //var Playlist = new Meteor.Collection("playlist");
 
   Template.remote.events({
+    'click .backward':function(event){
+      Meteor.call('backward');
+    },
+    'click .forward':function(event){
+      Meteor.call('forward');
+    },
     'click .queueMode':function(event){
-      Meteor.call('queueMode')
+      Meteor.call('queueMode');
     },
     'click .mute' :function(event){
       //
