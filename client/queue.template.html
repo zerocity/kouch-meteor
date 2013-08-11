@@ -5,7 +5,7 @@
 		<div class="video padding-left padding-top padding-bottomg " style="display: block;">
 			{{#if getPlaylist}}	
 				{{#each getPlaylist}}
-				<div class="media">
+				<div class="media {{#if isPlaying }} playing {{/if}}">
 				  <a class="pull-left" href="#">
 				    <img class="media-object" style="width: 64px; height: 64px;" src="{{thumbnail}}">
 				  </a>
@@ -19,8 +19,6 @@
 				    </a>
 				  </div>
 				</div>
-					<p>{{title.$t}}</p>
-					<hr>
 		  	{{/each}}
 			{{else}}
 				<p>ne doch net</p>

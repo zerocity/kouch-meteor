@@ -21,27 +21,44 @@ Meteor.startup(function () {
     var kkId = Kouch.findOne({});
   }else{
     var kkId = Kouch.findOne({});
+    console.log(kkId);
   }
 
   var NextQueue = function(playlistId){
     Fiber(function(){
       //todo add position list
       var kkId = Kouch.find({}).fetch()[0];
+
       console.log('[KKID][OLD][POSITION] ',kkId.currentPosition, Date());
+      
+      console.log(typeof playlistId);
+      
 
       if (typeof playlistId != 'undefined') {
+
         var next = kkId.playlist[kkId.playlist.indexOf(playlistId) + 1]; 
+
       }else{
-        console.log('[LOG]','no playlistid defined');
+
+        console.log('[LOG]','no playlistid defined',Kouch.find({}).fetch()[0].currentPosition);
 /*      console.log(Kouch.find({}).fetch()[0].currentPosition);
         console.log(kkId);
         console.log(kkId.currentPosition);*/
-        var next =  kkId.playlist[kkId.playlist.indexOf(kkId.currentPosition) + 1];
+        var currentPosition = Kouch.find({}).fetch()[0].currentPosition
+        if (currentPosition != ''){
+          var next =  kkId.playlist[kkId.playlist.indexOf(currentPosition) + 1];
+        }else{
+          var next = undefined
+        }
+
       }
 
-      if (typeof next !== 'undefined'){
+      if (typeof next != undefined){
         console.log('[NEXT]',next);
+        Playlist.update({'_id':kkId.currentPosition},{ $set :{'isPlaying':false}});
         Kouch.update({'_id':kkId._id},{ $set :{'currentPosition':next}});
+        Playlist.update({'_id':next},{ $set :{'isPlaying':true}});
+
         //console.log(Kouch.find({}).fetch()[0]);
         Meteor.call('parseWeb',next)
       }else{
@@ -55,8 +72,8 @@ Meteor.startup(function () {
   // Debuf mode for QUEUE
 
   //Kouch.update(kkId,{'$set':{currentPosition:'paNRbxEgyCNoxFWRa'}});
-  playerState.queue = true;
-  NextQueue();
+/*  playerState.queue = true;
+  NextQueue();*/
 
   var getKouch = function(){
     Fiber(function(){
@@ -75,7 +92,7 @@ Meteor.startup(function () {
       playerState.play = true;
 
       cplayer.stdout.on('data', function (data) {
-        //console.log('[CALL][MPlayer]\n' +data);
+        console.log('[CALL][MPlayer]\n' +data);
         //send commands //player.stdin.write('\nmute\n')
       });
 
@@ -116,8 +133,10 @@ Meteor.startup(function () {
     queueMode : function(){
       if (playerState.queue == false) {
         playerState.queue = true;
+        console.log('[PlAYER][QUEUE][MODE] ON');
       }else{
         playerState.queue = false
+        console.log('[PlAYER][QUEUE][MODE] OFF');
       }
     },
     playerMute : function(){
@@ -235,9 +254,15 @@ Meteor.startup(function () {
       console.log(playerState[key])
       console.log('[NEW][value] ',value);
     },
+    getList : function(){
+       var queue = Kouch.findOne({});
+       var pla = Playlist.find({'_id': { $in : queue.playlist } }).fetch(); 
+       return pla
+    },
     parseWeb : function(playlistId) {
       if (playerState.playerRun == true) {
-/*        playerState.queue = true    
+        console.log('test');
+/*      playerState.queue = true    
         console.log('[CALL][INSERT][QUEUE] '+sourceUrl);
         Playlist.insert({sourceUrl:sourceUrl}); */
       }else{

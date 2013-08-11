@@ -1,5 +1,3 @@
-var Kouch = new Meteor.Collection("Kouch"); 
-  
 Template.search.searchQueryResults = function () {
   return Session.get('q');
 };
