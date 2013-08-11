@@ -72,14 +72,12 @@ if (Meteor.isClient){
       Meteor.call('fullscreen');
     },
     'click .progress' : function(event){
-      console.log(event.toElement.valueAsNumber);
       check(event.toElement.valueAsNumber,Number)
       Meteor.call('volume',event.toElement.valueAsNumber)
     },
     'change .progress':function(){
       var mchange = $('.progress').val();
-      console.log(mchange);
-      Meteor.call('eventTest',mchange);
+      Meteor.call('volumeSlider',mchange);
     }
   });
 

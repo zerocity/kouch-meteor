@@ -16,24 +16,21 @@ Meteor.startup(function () {
     var jsonQueue = {
       currentPosition :''
     }
+    
     Kouch.insert(jsonQueue);
     console.log('[CREATE] kk');
     var kkId = Kouch.findOne({});
   }else{
     var kkId = Kouch.findOne({});
-    console.log(kkId);
+    //console.log('[QUEUE][CURRENT]\n',kkId.playlist);
   }
 
   var NextQueue = function(playlistId){
     Fiber(function(){
       //todo add position list
       var kkId = Kouch.find({}).fetch()[0];
-
       console.log('[KKID][OLD][POSITION] ',kkId.currentPosition, Date());
       
-      console.log(typeof playlistId);
-      
-
       if (typeof playlistId != 'undefined') {
 
         var next = kkId.playlist[kkId.playlist.indexOf(playlistId) + 1]; 
@@ -50,9 +47,7 @@ Meteor.startup(function () {
         }else{
           var next = undefined
         }
-
       }
-
       if (typeof next != undefined){
         console.log('[NEXT]',next);
         Playlist.update({'_id':kkId.currentPosition},{ $set :{'isPlaying':false}});
@@ -242,10 +237,9 @@ Meteor.startup(function () {
        };
      });
     },
-    eventTest : function(slider) {
-      console.log('test');
-        cplayer.stdin.write('\nvolume '+slider +' 1\n');
-      console.log('test');
+    volumeSlider : function(slider) {
+      console.log('[CALL] ',slider);
+      cplayer.stdin.write('\nvolume '+slider +' 1\n');
     }, 
     getPlayerState : function(){
       return playerState;
@@ -261,7 +255,10 @@ Meteor.startup(function () {
     },
     parseWeb : function(playlistId) {
       if (playerState.playerRun == true) {
-        console.log('test');
+        console.log('[CALL][NEW][VIDEO] ',playlistId);
+        playerState.playerRun = false
+        cplayer.stdin.write('\nstop\n');
+        Meteor.call('parseWeb',playlistId);
 /*      playerState.queue = true    
         console.log('[CALL][INSERT][QUEUE] '+sourceUrl);
         Playlist.insert({sourceUrl:sourceUrl}); */
@@ -276,7 +273,7 @@ Meteor.startup(function () {
             if (error) {
               if (error.code) {
                 console.log('[CODEX ERROR] ',error.code);
-                cplayer.stdin.write('\nstop\n');
+                NextQueue(playlistId);
               }
             }else{
               if (stdout) {
