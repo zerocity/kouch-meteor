@@ -36,14 +36,14 @@ Template.search.events({
           });
       }      
     },  
-    'click .addToQueue' : function(data){
+    'click .addToPlaylist' : function(data){
     //
     // ##### parseWeb
     //
     var query = $('#query').val();
     console.log('[QUERY] ',query);
 
-    Meteor.call('addToQueue',query,this,function(err,res){
+    Meteor.call('addToPlaylist',query,this,function(err,res){
       console.log('[ADD][TO][QUEUE] ',res);
     });
 
