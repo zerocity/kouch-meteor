@@ -82,6 +82,7 @@ Meteor.methods({
      return pla
   },
   parseWeb : function(playlistId) {
+
     if (playerState.play == true) {
       l('[CALL][NEW][VIDEO] ',playlistId);
       if (playerState.queue) {
@@ -93,7 +94,7 @@ Meteor.methods({
       }
     }else{
       if (typeof playlistId !== "undefined") {
-        var sourceUrl = Playlist.findOne({'_id':playlistId}).youtubeId
+        var sourceUrl = Playlist.findOne({'_id':playlistId}).youtubeId;
         l('[SOURCE]',sourceUrl);
         cp.exec('youtube-dl -g -f 34/35/45/84/102 '+sourceUrl.toString(),function (error, stdout, stderr,stdin) {
           // parameter bug
@@ -109,7 +110,7 @@ Meteor.methods({
                 playerState.skip = false
                 playerState.queue = true
               }
-
+             
               player(stdout,playlistId);
             }            
           }    

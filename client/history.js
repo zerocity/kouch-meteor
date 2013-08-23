@@ -24,9 +24,5 @@ Template.history.events({
     }
 
 
-  },
-  'click .del' :function(event){
-      console.log(this);
-      Meteor.call('delPlaylistEntry',this._id);
   }
 });

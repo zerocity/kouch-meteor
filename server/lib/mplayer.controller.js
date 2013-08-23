@@ -5,10 +5,15 @@ skipVideo = function(playlistId,queue){
       playerState.skip = true
       playerState.queue = false
       console.log('[SKIP][QUEUE] ',playlistId);
-      Meteor.call('playerStop');
+      //Meteor.call('playerStop'); .... async ... player cant be closed like this ...
+      console.log('[CALL][PlAYER] Stop');
+      cplayer.stdin.write('\nstop\n');
+
       Meteor.call('parseWeb',playlistId)
     }else{
-      Meteor.call('playerStop');
+      //Meteor.call('playerStop'); .... async ... player cant be closed like this ...
+      console.log('[CALL][PlAYER] Stop');
+      cplayer.stdin.write('\nstop\n');
       console.log('[SKIP] ',playlistId);
       Meteor.call('parseWeb',playlistId)
     }

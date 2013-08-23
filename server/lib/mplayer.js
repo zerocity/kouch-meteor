@@ -12,6 +12,9 @@ player = function(sourceUrl,playlistId) {
 
     cplayer.on('close',function(data) {
       playerState.play = false;
+
+       l('[STATE]',playerState);
+
       if (playerState.queue == true) {
         console.log('[PlAYER][QUEUE] Start next Video');
         NextQueue(playlistId);            

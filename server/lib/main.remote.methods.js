@@ -57,9 +57,14 @@ Meteor.methods({
     }
   },
   playerStop : function(){
-    if (playerState.play == false) {
+    if (playerState.play == true) {
       console.log('[CALL][PlAYER] Stop');
       cplayer.stdin.write('\nstop\n');
+    }else{
+      if (playerState.queue == true) {
+        console.log('[CALL][PlAYER] Stop');
+        cplayer.stdin.write('\nstop\n');
+      }
     }
   },
   volume : function(slider){

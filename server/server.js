@@ -1,4 +1,5 @@
 Meteor.startup(function () {
+  //global
   log = true;
   cp = Npm.require('child_process');
   cplayer = undefined;
