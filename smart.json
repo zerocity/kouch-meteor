@@ -3,6 +3,7 @@
     "npm": {},
     "router": {},
     "bootstrap-3": {},
-    "mini-pages": {}
+    "mini-pages": {},
+    "iron-router": {}
   }
 }

@@ -3,6 +3,7 @@
 
 if (Kouch.find().count() === 0) {
   var jsonQueue = {
+  	state:'',
     currentPosition :''
   }
   

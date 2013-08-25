@@ -81,6 +81,10 @@ Meteor.methods({
      var pla = Playlist.find({'_id': { $in : queue.playlist } }).fetch(); 
      return pla
   },
+  setState : function(state){
+    kk = Kouch.findOne({})
+    Kouch.update({'_id':kk._id},{ $set :{'state':state}});
+  },
   parseWeb : function(playlistId) {
 
     if (playerState.play == true) {
@@ -96,6 +100,8 @@ Meteor.methods({
       if (typeof playlistId !== "undefined") {
         var sourceUrl = Playlist.findOne({'_id':playlistId}).youtubeId;
         l('[SOURCE]',sourceUrl);
+        Meteor.call('setState','Parsing ...'+sourceUrl);
+
         cp.exec('youtube-dl -g -f 34/35/45/84/102 '+sourceUrl.toString(),function (error, stdout, stderr,stdin) {
           // parameter bug
           // -f choise prefeard video format http://en.wikipedia.org/wiki/YouTube#Quality_and_codecs

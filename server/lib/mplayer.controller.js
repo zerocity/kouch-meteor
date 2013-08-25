@@ -61,3 +61,13 @@ updateIsPlaying  =function(nextPlaylistId){
     console.log('[UPDATE][ISPLAYING]');    
   }).run();
 }
+
+
+setState = function(state){
+
+  Fiber(function(){
+    kk = Kouch.findOne({})
+    Kouch.update({'_id':kk._id},{ $set :{'state':state}});  
+    }).run();
+  
+}

@@ -1,5 +1,12 @@
 <template name="queue">
 
+	{{#if settings.state}}
+ 	<div class="well">
+			{{settings.state}}
+	</div>
+ {{/if}}
+
+
 	<div class="queue">
 		{{>remote}}
 		<div class="video padding-left padding-top padding-bottomg " style="display: block;">
