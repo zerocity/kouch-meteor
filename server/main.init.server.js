@@ -8,7 +8,7 @@ if (Kouch.find().count() === 0) {
   }
   
   Kouch.insert(jsonQueue);
-  console.log('[CREATE] kk');
+  logger.info('[CREATE] kouch Settings');
   kkId = Kouch.findOne({});
 }else{
   kkId = Kouch.findOne({});

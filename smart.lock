@@ -6,7 +6,9 @@
       "router": {},
       "bootstrap-3": {},
       "mini-pages": {},
-      "iron-router": {}
+      "iron-router": {},
+      "winston": {},
+      "winston-loggly": {}
     },
     "packages": {
       "npm": {
@@ -33,6 +35,16 @@
         "git": "https://github.com/EventedMind/iron-router.git",
         "tag": "v0.5.4",
         "commit": "3e0e22ff85630b7503d0daa1538c6d90abb84020"
+      },
+      "winston": {
+        "git": "https://github.com/tomrogers3/meteor-winston.git",
+        "tag": "v0.0.2",
+        "commit": "3e27e22cc7a9bae7d0a6b4048619cf29d8d0d36b"
+      },
+      "winston-loggly": {
+        "git": "https://github.com/tomrogers3/meteor-winston-loggly.git",
+        "tag": "v0.0.3",
+        "commit": "87ac23ce1134d778d53a3b99350921f9eb15358c"
       },
       "page-js-ie-support": {
         "git": "https://github.com/tmeasday/meteor-page-js-ie-support.git",

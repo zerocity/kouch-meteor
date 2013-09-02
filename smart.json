@@ -4,6 +4,8 @@
     "router": {},
     "bootstrap-3": {},
     "mini-pages": {},
-    "iron-router": {}
+    "iron-router": {},
+    "winston": {},
+    "winston-loggly": {}
   }
 }

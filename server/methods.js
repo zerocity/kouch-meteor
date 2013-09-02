@@ -9,32 +9,32 @@ Meteor.methods({
       date:Date.now(),
       isPlaying:false
     });
-    l('\n[CALL][ADD][TO]QUEUE][INSERT] ',pl)
+    logger.info('\n[CALL][ADD][TO]QUEUE][INSERT] ',pl)
     Kouch.update({'_id':kkId._id},{'$push':{ 'playlist':pl}});    
     return pl
   },
   queueMode : function(){
     if (playerState.queue == false) {
       playerState.queue = true;
-      l('[PlAYER][QUEUE][MODE] ON');
+      logger.info('[PlAYER][QUEUE][MODE] ON');
     }else{
       playerState.queue = false
-      l('[PlAYER][QUEUE][MODE] OFF');
+      logger.info('[PlAYER][QUEUE][MODE] OFF');
     }
   },   
   playerFullscreen : function(){
     if (playerState.play) {
-      l('[CALL] Fullscreen');
+      logger.info('[CALL] Fullscreen');
       cplayer.stdin.write('\nf\n');
     }
   },
   getQueue : function(){
-    l('[CALL][QUEUE] Next');
+    logger.info('[CALL][QUEUE] Next');
     getQueue();
     //return Queue.find({}).fetch()
   },
   delPlaylistEntry : function(id){
-    l('\n[DEL][ENTRY] ',id);
+    logger.info('\n[DEL][ENTRY] ',id);
     check(id, String)
 
     var kk = Kouch.findOne({})
@@ -42,9 +42,9 @@ Meteor.methods({
 
     kk.playlist.splice(pos,1)
    
-    /*console.log('POS',pos);
-    console.log('OLD',kk.playlist);
-    console.log('new',kk.playlist);*/
+    /*logger.info('POS',pos);
+    logger.info('OLD',kk.playlist);
+    logger.info('new',kk.playlist);*/
     Kouch.update({'_id':kk._id},{ $set :{'playlist':kk.playlist}});
 
   },
@@ -53,17 +53,17 @@ Meteor.methods({
     return pl
   },
   startStream : function(){
-    l('[CALL]Start Stream: ');
+    logger.info('[CALL]Start Stream: ');
     cp.exec('livestreamer twitch.tv/nl_kripp 480p --player mplayer',function (error, stdout, stderr,stdin) {
       // parameter bug
       // -f choise prefeard video format http://en.wikipedia.org/wiki/YouTube#Quality_and_codecs
      if (error) {
-       l(error.stack);
-       l('Error code: '+error.code);
-       l('Signal received: '+error.signal);
+       logger.info(error.stack);
+       logger.info('Error code: '+error.code);
+       logger.info('Signal received: '+error.signal);
      }
      if (stdout) {
-        l(stdout);
+        logger.info(stdout);
         player(stdout);
         cplayer.stdin.write('\nf');
      };
@@ -73,8 +73,8 @@ Meteor.methods({
     return playerState;
   },
   setPlayerState : function(key,value){
-    l(playerState[key])
-    l('[NEW][value] ',value);
+    logger.info(playerState[key])
+    logger.info('[NEW][value] ',value);
   },
   getList : function(){
      var queue = Kouch.findOne({});
@@ -88,9 +88,9 @@ Meteor.methods({
   parseWeb : function(playlistId) {
 
     if (playerState.play == true) {
-      l('[CALL][NEW][VIDEO] ',playlistId);
+      logger.info('[CALL][NEW][VIDEO] ',playlistId);
       if (playerState.queue) {
-        l('[In queue mode]');        
+        logger.info('[In queue mode]');        
         skipVideo(playlistId,true);
       }else{
         playerState.play = false;
@@ -99,7 +99,7 @@ Meteor.methods({
     }else{
       if (typeof playlistId !== "undefined") {
         var sourceUrl = Playlist.findOne({'_id':playlistId}).youtubeId;
-        l('[SOURCE]',sourceUrl);
+        logger.info('[SOURCE]',sourceUrl);
         Meteor.call('setState','Parsing ...'+sourceUrl);
 
         cp.exec('youtube-dl -g -f 34/35/45/84/102 '+sourceUrl.toString(),function (error, stdout, stderr,stdin) {
@@ -107,7 +107,7 @@ Meteor.methods({
           // -f choise prefeard video format http://en.wikipedia.org/wiki/YouTube#Quality_and_codecs
           if (error) {
             if (error.code) {
-              l('[CODEX ERROR] ',error.code);
+              logger.info('[CODEX ERROR] ',error.code);
               NextQueue(playlistId);
             }
           }else{
@@ -122,14 +122,14 @@ Meteor.methods({
           }    
        });
       }else{ 
-        l(playlistId);
+        logger.info(playlistId);
       };   
     }
   }
 });
 
 /*        if (error) {
-          l(error.stack);
-          l('Error code: '+error.code);
-          l('Signal received: '+error.signal);
+          logger.info(error.stack);
+          logger.info('Error code: '+error.code);
+          logger.info('Signal received: '+error.signal);
         }*/  

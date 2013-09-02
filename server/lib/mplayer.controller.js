@@ -4,17 +4,17 @@ skipVideo = function(playlistId,queue){
     if (queue) {
       playerState.skip = true
       playerState.queue = false
-      console.log('[SKIP][QUEUE] ',playlistId);
+      logger.info('[SKIP][QUEUE] ',playlistId);
       //Meteor.call('playerStop'); .... async ... player cant be closed like this ...
-      console.log('[CALL][PlAYER] Stop');
+      logger.info('[CALL][PlAYER] Stop');
       cplayer.stdin.write('\nstop\n');
 
       Meteor.call('parseWeb',playlistId)
     }else{
       //Meteor.call('playerStop'); .... async ... player cant be closed like this ...
-      console.log('[CALL][PlAYER] Stop');
+      logger.info('[CALL][PlAYER] Stop');
       cplayer.stdin.write('\nstop\n');
-      console.log('[SKIP] ',playlistId);
+      logger.info('[SKIP] ',playlistId);
       Meteor.call('parseWeb',playlistId)
     }
   }).run();
@@ -25,12 +25,12 @@ NextQueue = function(playlistId){
   Fiber(function(){
     //todo add position list
     var kkId = Kouch.find({}).fetch()[0];
-    console.log('[KKID][OLD][POSITION] ',kkId.currentPosition, Date());
+    logger.info('[KKID][OLD][POSITION] ',kkId.currentPosition, Date());
     
     if (typeof playlistId != 'undefined') {
       var next = kkId.playlist[kkId.playlist.indexOf(playlistId) + 1]; 
     }else{
-      console.log('[LOG]','no playlistid defined',Kouch.find({}).fetch()[0].currentPosition);
+      logger.info('[LOG]','no playlistid defined',Kouch.find({}).fetch()[0].currentPosition);
       var currentPosition = Kouch.find({}).fetch()[0].currentPosition
       if (currentPosition != ''){
         var next =  kkId.playlist[kkId.playlist.indexOf(currentPosition) + 1];
@@ -39,14 +39,14 @@ NextQueue = function(playlistId){
       }
     }
     if (typeof next != undefined){
-      console.log('[NEXT]',next);
+      logger.info('[NEXT]',next);
       updateIsPlaying(next)
       Meteor.call('parseWeb',next)
     }else{
       playerState.queue = false;
       playerState.play = false;
       playerState.playerRun = false;
-      console.log('[PlAYER][QUEUE][MODE] OFF');        
+      logger.info('[PlAYER][QUEUE][MODE] OFF');        
     }    
   }).run();
 }
@@ -58,7 +58,7 @@ updateIsPlaying  =function(nextPlaylistId){
     Playlist.update({'_id':kkId.currentPosition},{ $set :{'isPlaying':false}});
     Kouch.update({'_id':kkId._id},{ $set :{'currentPosition':nextPlaylistId}});
     Playlist.update({'_id':nextPlaylistId},{ $set :{'isPlaying':true}});
-    console.log('[UPDATE][ISPLAYING]');    
+    logger.info('[UPDATE][ISPLAYING]');    
   }).run();
 }
 
