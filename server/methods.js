@@ -106,6 +106,9 @@ Meteor.methods({
           // parameter bug
           // -f choise prefeard video format http://en.wikipedia.org/wiki/YouTube#Quality_and_codecs
           if (error) {
+          logger.info(error.stack);
+          logger.info('Error code: '+error.code);
+          logger.info('Signal received: '+error.signal);
             if (error.code) {
               logger.info('[CODEX ERROR] ',error.code);
               NextQueue(playlistId);
