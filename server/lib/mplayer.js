@@ -5,7 +5,8 @@ player = function(sourceUrl,playlistId) {
 
   if (playerState.play == false) {
 
-    cplayer = cp.spawn('mplayer',['-slave','-idle','-cache','4096','-fs',sourceUrl.trim()]);     //-fs '-fixed-vo'
+    //cplayer = cp.spawn('mplayer',['-slave','-idle','-cache','4096','-fs',sourceUrl.trim()]);     //-fs '-fixed-vo'
+    cplayer = cp.spawn('mplayer',[sourceUrl.trim()]);     //-fs '-fixed-vo'
     logger.info('[CALL][Player] ');//,sourceUrl);
     playerState.play = true;
     setState('Buffering '+ playlistId);
