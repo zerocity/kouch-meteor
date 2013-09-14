@@ -43,7 +43,7 @@ Template.search.events({
     var query = $('#query').val();
     console.log('[QUERY] ',query);
 
-    Meteor.call('addToPlaylist',query,this,function(err,res){
+    Meteor.call('addToPlaylist','youtube',this,function(err,res){
       console.log('[ADD][TO][QUEUE] ',res);
     });
   },
@@ -51,7 +51,7 @@ Template.search.events({
     var query = $('#query').val();
     console.log('[QUERY] ',query);
 
-    var video = Meteor.call('addToPlaylist',query,this,function(err,res){
+    var video = Meteor.call('addToPlaylist','youtube',this,function(err,res){
       console.log('[ADD][TO][QUEUE] and play ',res);
       Meteor.call('parseWeb',res);
     });

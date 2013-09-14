@@ -1,17 +1,37 @@
 Meteor.methods({
-  addToPlaylist : function(searchQuery,entry){
-    var pl = Playlist.insert({searchQuery:searchQuery,
-      youtubeId:entry.youtubeId,
-      title:entry.title,
-      thumbnail:entry.thumbnail,
-      description:entry.description,
-      duration:entry.duration,
-      date:Date.now(),
-      isPlaying:false
-    });
-    logger.info('\n[CALL][ADD][TO]QUEUE][INSERT] ',pl)
-    Kouch.update({'_id':kkId._id},{'$push':{ 'playlist':pl}});    
-    return pl
+  addToPlaylist : function(type,entry){
+    if (type == 'youtube') {
+      var pl = Playlist.insert({type:type,
+        youtubeId:entry.youtubeId,
+        title:entry.title,
+        thumbnail:entry.thumbnail,
+        description:entry.description,
+        duration:entry.duration,
+        date:Date.now(),
+        isPlaying:false
+      });
+
+      logger.info('[CALL][ADD][TO]QUEUE][INSERT][YOUTUBE] ',pl);
+      Kouch.update({'_id':kkId._id},{'$push':{ 'playlist':pl}});    
+      return pl
+    } else if (type == 'api'){
+      var pl = Playlist.insert({type:type,
+        url:entry,
+        title:entry.title,
+        date:Date.now(),
+        isPlaying:false
+      });
+      logger.info('[CALL][ADD][TO]QUEUE][INSERT]['+type+']',pl);
+      Kouch.update({'_id':kkId._id},{'$push':{ 'playlist':pl}});    
+      return pl      
+    };
+  },
+  playIt : function(url,playlistId){
+    if (playerState.skip == true) {
+      playerState.skip = false
+      playerState.queue = true
+    }
+      player(url,playlistId);
   },
   queueMode : function(){
     if (playerState.queue == false) {
@@ -128,6 +148,49 @@ Meteor.methods({
         logger.info(playlistId);
       };   
     }
+  },
+  analyse : function(api,sourceUrl){
+
+      if (typeof sourceUrl !== undefined) {
+        logger.info('[API]',sourceUrl);
+        Meteor.call('setState','get api call ...'+sourceUrl);
+        var parse = cp.spawn('youtube-dl',['-ge','--get-thumbnail','-f 34/35/45/84/102',sourceUrl.toString()])
+        //ge --get-thumbnail -f 34/35/45/84/102 '+sourceUrl.toString()
+        result = [] 
+
+        parse.stdout.on('data', function (data) {
+          result += data.toString()
+        });
+       
+        parse.stderr.on('data', function (data) {
+          logger.info('stderr: ' + data);
+        });
+
+        parse.on('close', function (code) {
+          result = result.split('\n')
+          logger.info('[START INSERT]')
+          holder = []
+          for (i=0;i<result.length;i+=3){
+            if (result[i].length > 0){
+              var json = {title:result[i], url:result[i+1], thumbnail:result[i+2]}
+              holder.push(json)
+            }
+          }
+          
+          logger.info(holder ,typeof holder, holder.length)
+          
+          Fiber(function(){
+            for (i=0;i<holder.length;i++){
+              pl = Playlist.insert(holder[i])
+              logger.info('[CALL][ADD][TO]QUEUE][INSERT][API]',pl);
+              Kouch.update({'_id':kkId._id},{'$push':{ 'playlist':pl}}); 
+            }
+          }).run();
+
+          logger.info('child process exited with code ' + code);
+      });
+    }
+
   }
 });
 

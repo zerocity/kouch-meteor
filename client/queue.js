@@ -29,6 +29,8 @@ Template.queue.events({
       console.log('[Q][play] '+ this._id);
       Meteor.call('parseWeb',this._id);
     }else{
+      console.log('[Q][play] '+ this._id);
+      Meteor.call('playIt',this.url,this._id);
       console.log('[ERROR] :',this);
       console.log('[ERROR] :',event);
     }

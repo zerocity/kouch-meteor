@@ -6,6 +6,7 @@
     "mini-pages": {},
     "iron-router": {},
     "winston": {},
-    "winston-loggly": {}
+    "winston-loggly": {},
+    "reststop": {}
   }
 }
