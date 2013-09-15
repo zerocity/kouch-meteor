@@ -12,7 +12,7 @@ Template.search.events({
         Meteor.http.call("GET", "http://gdata.youtube.com/feeds/api/videos",
           {params: {q: query,'max-results':max_videos,alt:'json'}}, function(error,result) {
             var simpleJson = JSON.parse(result.content).feed.entry ;
-            var data = _.map(simpleJson, function (num,key){
+            var data = _.map(simpleJson, function (num,key){            
               var a = num.id.$t.split("/"),
                 id = a[6],
                 title = num.title.$t,
@@ -25,6 +25,7 @@ Template.search.events({
                 duration = (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds  < 10 ? "0" + seconds : seconds);
                      
                 return {
+                  url:"http://www.youtube.com/watch?v="+id,
                   youtubeId:id,
                   title:title,
                   thumbnail:thumbnail,
@@ -32,7 +33,7 @@ Template.search.events({
                   duration:duration};
                 });
             Session.set("q",data);
-            return true
+            return result
           });
       }      
   },  
@@ -42,10 +43,10 @@ Template.search.events({
     //
     var query = $('#query').val();
     console.log('[QUERY] ',query);
-
-    Meteor.call('addToPlaylist','youtube',this,function(err,res){
-      console.log('[ADD][TO][QUEUE] ',res);
-    });
+    Meteor.call('analyse','youtube',this)
+    //Meteor.call('addToPlaylist','youtube',this,function(err,res){
+    //console.log('[ADD][TO][QUEUE] ',res);
+    //});
   },
   'click .play' : function(data){
     var query = $('#query').val();
@@ -56,6 +57,7 @@ Template.search.events({
       Meteor.call('parseWeb',res);
     });
   }
+  
 });
 /*    Meteor.call('addToPlaylist',query,this,function (error,playlist) {
       if (data.toElement.dataset.id) {

@@ -9,18 +9,22 @@
 
 <template name="layout">
 	<div class="container">
-	
-	<ul class="list-inline">
-		<li><a href="/search/" class="btn button btn-primary">Search</a></li>
-		<li><a href="/queue/" class="btn button btn-primary">Queue</a></li>
-		<li><a href="/remote/" class="btn button btn-primary">Remote</a></li>
-		<li><a href="/history/" class="btn button "><span class="glyphicon glyphicon-time"></span></a></li>
-	</ul>
+	  <header>
+	   	<ul class="list-inline">
+				<li><a href="/search/" class="btn button btn-primary">Search</a></li>
+				<li><a href="/" class="btn button btn-primary">Queue</a></li>
+				<li><a href="/remote/" class="btn button btn-primary">Remote</a></li>
+				<li><a href="/history/" class="btn button "><span class="glyphicon glyphicon-time"></span></a></li>
+			</ul>
+	  </header>
 
-		<div class="main">
-	  	{{{yield}}}			
-		</div>
-
+			<div class="main">
+	  <!-- the main template will be rendered here -->
+		  	{{{yield}}}			
+			</div>
+	  <footer>
+	    <p>Footer</p>
+	  </footer>
 	</div>
-</template>
 
+</template>

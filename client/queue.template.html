@@ -1,18 +1,16 @@
 <template name="queue">
 
 	{{#if settings.state}}
- 	<div class="well">
-			{{settings.state}}
-	</div>
- {{/if}}
-
+	 	<div class="well">
+				{{settings.state}}
+		</div>
+ 	{{/if}}
 
 	<div class="queue">
 		{{>remote}}
 		<div class="video padding-left padding-top padding-bottomg " style="display: block;">
-			{{#if meteorstatus }}	
-				{{#if getPlaylist }}	
-					{{#each getPlaylist}}
+			{{#if getPlaylist }}	
+				{{#each getPlaylist}}
 					<div class="media {{#if isPlaying }} playing {{/if}}">
 					  <a class="pull-left" href="#">
 					    <img class="media-object" style="width: 64px; height: 64px;" src="{{thumbnail}}">
@@ -28,15 +26,10 @@
 					    <span class="glyphicon glyphicon-time"> {{duration}} </span>
 					  </div>
 					</div>
-			  	{{/each}}
-			  {{else}}
-					<p>No entrys </p>
-				{{/if}}  
-			{{else}}
-				<p>Loading ... </p>
-			{{/if}}
+		  	{{/each}}
+		  {{else}}
+				<p>No entrys </p>
+			{{/if}}  
 		</div>			  		
-					<!-- ### Results will be append here ###  -->
 	</div>
-
 </template>

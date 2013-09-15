@@ -89,5 +89,4 @@ if (Meteor.isClient){
       Meteor.call('volumeSlider',mchange);
     }
   });
-
 };

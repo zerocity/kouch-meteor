@@ -1,10 +1,13 @@
 Template.queue.settings = function () {
-  return Kouch.findOne({})
+  if (Session.get('data_loaded')) {
+    kk =  Kouch.findOne({})
+    return kk
+  };
 };
 
-Template.queue.meteorstatus = function () {
+/*Template.queue.meteorstatus = function () {
   return Meteor.status().connected;
-};
+};*/
 
 Template.queue.getPlaylist = function () {
   if (Session.get('data_loaded')) {
@@ -20,25 +23,20 @@ Template.queue.getPlaylist = function () {
   };
 };
 
+Template.queue.playerState = function() {
+  var kk = Kouch.findOne({});   
+  console.log(kk);
+  return kk
+}
+
 Template.queue.events({
   'click .playStart' : function(event){
-    //
-    // ##### parseWeb
-    //
-    if (this.youtubeId) {
-      console.log('[Q][play] '+ this._id);
-      Meteor.call('parseWeb',this._id);
-    }else{
-      console.log('[Q][play] '+ this._id);
-      Meteor.call('playIt',this.url,this._id);
-      console.log('[ERROR] :',this);
-      console.log('[ERROR] :',event);
-    }
-
-
+    console.log('[Q][play] '+ this._id);
+    Meteor.call('playIt',this._id);
+    console.log('[THIS] :',this);
   },
   'click .del' :function(event){
-      console.log(this);
-      Meteor.call('delPlaylistEntry',this._id);
+    console.log(this);
+    Meteor.call('delPlaylistEntry',this._id);
   }
 });

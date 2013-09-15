@@ -2,6 +2,7 @@ Meteor.methods({
   addToPlaylist : function(type,entry){
     if (type == 'youtube') {
       var pl = Playlist.insert({type:type,
+        url:entry.url,
         youtubeId:entry.youtubeId,
         title:entry.title,
         thumbnail:entry.thumbnail,
@@ -26,12 +27,13 @@ Meteor.methods({
       return pl      
     };
   },
-  playIt : function(url,playlistId){
+  playIt : function(playlistId){
     if (playerState.skip == true) {
       playerState.skip = false
       playerState.queue = true
     }
-      player(url,playlistId);
+      logger.info('[URL]',playlistId)
+      player(playlistId);
   },
   queueMode : function(){
     if (playerState.queue == false) {
@@ -150,7 +152,44 @@ Meteor.methods({
     }
   },
   analyse : function(api,sourceUrl){
+    if (api=='youtube') {
+    logger.info(api)
+      if (typeof sourceUrl !== undefined) {
 
+        logger.info('[YouTube]',sourceUrl);
+        Meteor.call('setState','add to playlist ...'+ sourceUrl.title);
+        var parse = cp.spawn('youtube-dl',['-g','-f 34/35/45/84/102',sourceUrl.url.toString()])
+        //ge --get-thumbnail -f 34/35/45/84/102 '+sourceUrl.toString()
+        result = [] 
+
+        parse.stdout.on('data', function (data) {
+          result += data.toString()
+        });
+       
+        parse.stderr.on('data', function (data) {
+          logger.info('stderr: ' + data);
+        });
+
+        parse.on('close', function (code) {
+          Fiber(function(){
+            var pl = Playlist.insert({type:api,
+              url:result,
+              originUrl:sourceUrl.url,
+              youtubeId:sourceUrl.youtubeId,
+              title:sourceUrl.title,
+              thumbnail:sourceUrl.thumbnail,
+              description:sourceUrl.description,
+              duration:sourceUrl.duration,
+              date:Date.now(),
+              isPlaying:false
+            });
+            logger.info('[CALL][ADD][TO]QUEUE][INSERT][YouTube]',pl);
+            Kouch.update({'_id':kkId._id},{'$push':{ 'playlist':pl}}); 
+          }).run();
+        });
+      //end of typeof IF 
+      }
+    } else if (api == 'api') {
       if (typeof sourceUrl !== undefined) {
         logger.info('[API]',sourceUrl);
         Meteor.call('setState','get api call ...'+sourceUrl);
@@ -188,10 +227,13 @@ Meteor.methods({
           }).run();
 
           logger.info('child process exited with code ' + code);
-      });
+        });
+      };
     }
 
   }
+
+  //end of Meteror.methods
 });
 
 /*        if (error) {
