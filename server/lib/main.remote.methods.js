@@ -4,7 +4,7 @@ Meteor.methods({
       var kkId = Kouch.findOne();
       var next = kkId.playlist.indexOf(kkId.currentPosition) - 1      
       var nextVideo = kkId.playlist[next];
-      logger.info(nextVideo);
+
       if (next >=0 && next <= kkId.playlist.length ) {
         if (playerState.queue == true) {
           skipVideo(nextVideo,true);      
@@ -19,15 +19,22 @@ Meteor.methods({
       var kkId = Kouch.findOne();
       var next = kkId.playlist.indexOf(kkId.currentPosition) + 1      
       var nextVideo = kkId.playlist[next];
-      logger.info(next);
-      logger.info(kkId.playlist.length);
+
+      logger.info(kkId.playlist)
+      logger.info('currentPosition',kkId.currentPosition)
+      logger.info('Next',next)
+      logger.info('playlistid',nextVideo)
+      
       if (next >=0 && next <= kkId.playlist.length ) {
+
         if (playerState.queue == true) {
           skipVideo(nextVideo,true);      
         }else{
           skipVideo(nextVideo,false);
         }
+
       }
+
     }
   },
   playerMute : function(){
@@ -44,28 +51,26 @@ Meteor.methods({
     }
   },
   playerPause : function(){
-    if (cplayer.pid) {
-      //cplayer.stdin.write('\nosd_show_text "player stoped" 10000 \n');
-      cplayer.stdin.write('\nget_property metadata\n');
-      
-      //cplayer.stdin.write('\npause\n');
-      logger.info('[CALL][PlAYER] Pause');
-    }
 
-/*    if (playerState.play == true) {
-      logger.info('[CALL][PlAYER] Pause');
-      cplayer.stdin.write('\npause\n');
-    }else{
-      if (playerState.playerRun == false) {
-        NextQueue();
+    if (typeof cplayer != "undefined") {
+      if (playerState.play == true) {
+          playerState.play = false
+          cplayer.stdin.write('\nosd_show_text "player pause" 10000 \n');
+          cplayer.stdin.write('\npause\n');
       }else{
-        logger.info('[CALL][PlAYER] Play');
-        cplayer.stdin.write('\npause\n');
+        if (playerState.stop == true) {
+          logger.info('[CALL][PlAYER] stopped next video');
+          NextQueue();
+        }else{
+          playerState.play = true
+          cplayer.stdin.write('\nosd_show_text "player play" 10000 \n');
+          cplayer.stdin.write('\nplay\n');
+        }
       }
-    }*/
+    }
   },
   playerStop : function(){
-    if (cplayer.pid) {
+    if (typeof cplayer.pid != "undefined") {
       cplayer.stdin.write('\nosd_show_text "player stoped" 10000 \n');
       logger.info('[CALL][PlAYER] Stop',cplayer.pid);
       cplayer.stdin.write('\nstop\n');      

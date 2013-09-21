@@ -1,6 +1,7 @@
 // skipping current played video 
+// playlistId is the next played video , queue is a switch if its enabled or not 
 skipVideo = function(playlistId,queue){
-  Fiber(function(){
+  //Fiber(function(){
     if (queue) {
       playerState.skip = true
       playerState.queue = false
@@ -9,15 +10,17 @@ skipVideo = function(playlistId,queue){
       logger.info('[CALL][PlAYER] Stop');
       cplayer.stdin.write('\nstop\n');
 
-      Meteor.call('playIt',playlistId)
+      player(playlistId); 
+      //Meteor.call('playIt',playlistId)
     }else{
       //Meteor.call('playerStop'); .... async ... player cant be closed like this ...
-      logger.info('[CALL][PlAYER] Stop');
+      logger.info('[SKIP] to ',playlistId);
       cplayer.stdin.write('\nstop\n');
-      logger.info('[SKIP] ',playlistId);
-      Meteor.call('playIt',playlistId)
+
+      player(playlistId); 
+      //Meteor.call('playIt',playlistId)
     }
-  }).run();
+  //}).run();
 }
 
 // video finishes the next video in kk.playlist is played
@@ -37,18 +40,7 @@ NextQueue = function(playlistId){
       logger.info(kkId.playlist.indexOf(kkId.currentPosition) + 1);
     }
 
-    //old stuff remove it later
-/*    if (typeof playlistId != 'undefined') {
-    }else{
-      logger.info('[LOG]','no playlistid defined',Kouch.find({}).fetch()[0].currentPosition);
-      var currentPosition = Kouch.find({}).fetch()[0].currentPosition
-      if (currentPosition != ''){
-        var next =  kkId.playlist[kkId.playlist.indexOf(currentPosition) + 1];
-      }else{
-        var next = undefined
-      }
-    }*/
-    if (typeof next != undefined){
+    if (typeof next != "undefined"){
       logger.info('[PID] ',cplayer.pid)
       logger.info('[NEXT]',nextSourceUrl);
       updateIsPlaying(nextSourceUrl)

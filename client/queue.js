@@ -1,13 +1,12 @@
 Template.queue.settings = function () {
   if (Session.get('data_loaded')) {
-    kk =  Kouch.findOne({})
-    return kk
+    return Kouch.findOne({})
   };
 };
 
-/*Template.queue.meteorstatus = function () {
+Template.queue.meteorstatus = function () {
   return Meteor.status().connected;
-};*/
+};
 
 Template.queue.getPlaylist = function () {
   if (Session.get('data_loaded')) {

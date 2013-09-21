@@ -8,7 +8,8 @@ Meteor.startup(function () {
     play : false,
     mute : false,
     queue : false,
-    playerRun : false
+    playerRun : false,
+    stop : true
   }
   Fiber = Npm.require("fibers");
 

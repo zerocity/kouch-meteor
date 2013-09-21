@@ -1,7 +1,8 @@
 Meteor.methods({
   addToPlaylist : function(type,entry){
     if (type == 'youtube') {
-      var pl = Playlist.insert({type:type,
+      var pl = Playlist.insert({
+        type:type,
         url:entry.url,
         youtubeId:entry.youtubeId,
         title:entry.title,
@@ -28,12 +29,32 @@ Meteor.methods({
     };
   },
   playIt : function(playlistId){
-    if (playerState.skip == true) {
-      playerState.skip = false
-      playerState.queue = true
-    }
+
+
+    if (typeof cplayer == "undefined") {
+      // mplayer is not started
       logger.info('[URL]',playlistId)
-      player(playlistId);
+      player(playlistId); 
+      playerState.stop == false
+    } else {
+
+      logger.info(playlistId)
+      logger.info(playerState) 
+
+      if (playerState.skip == true) {
+        playerState.skip = false
+        playerState.queue = true
+      }
+      if (playerState.stop == true && typeof playlistId == "undefined" ) {
+        logger.info('[CALL][PlAYER] next QUEUE');
+        playerState.stop == false 
+        NextQueue();
+      }else{
+        logger.info('playit')
+        player(playlistId); 
+      }
+    
+    }
   },
   queueMode : function(){
     if (playerState.queue == false) {
@@ -58,22 +79,15 @@ Meteor.methods({
   delPlaylistEntry : function(id){
     logger.info('\n[DEL][ENTRY] ',id);
     check(id, String)
-
     var kk = Kouch.findOne({})
     var pos = kk.playlist.indexOf(id)
-
     kk.playlist.splice(pos,1)
-   
-    /*logger.info('POS',pos);
-    logger.info('OLD',kk.playlist);
-    logger.info('new',kk.playlist);*/
     Kouch.update({'_id':kk._id},{ $set :{'playlist':kk.playlist}});
-
-  },
+  },/*
   getPlaylist : function(){
     var pl = Playlist.find({}).fetch();   
     return pl
-  },
+  },*/
   startStream : function(){
     logger.info('[CALL]Start Stream: ');
     cp.exec('livestreamer twitch.tv/nl_kripp 480p --player mplayer',function (error, stdout, stderr,stdin) {
@@ -159,7 +173,7 @@ Meteor.methods({
         logger.info('[YouTube]',sourceUrl);
         Meteor.call('setState','add to playlist ...'+ sourceUrl.title);
         var parse = cp.spawn('youtube-dl',['-g','-f 34/35/45/84/102',sourceUrl.url.toString()])
-        //ge --get-thumbnail -f 34/35/45/84/102 '+sourceUrl.toString()
+        //ge --get-thumbnail -f 34/35/45/84/102 '+sourceUrl.toString() 
         result = [] 
 
         parse.stdout.on('data', function (data) {
@@ -171,6 +185,9 @@ Meteor.methods({
         });
 
         parse.on('close', function (code) {
+
+          logger.info('result from YouTube ',result)
+
           Fiber(function(){
             var pl = Playlist.insert({type:api,
               url:result,
@@ -211,7 +228,7 @@ Meteor.methods({
           holder = []
           for (i=0;i<result.length;i+=3){
             if (result[i].length > 0){
-              var json = {title:result[i], url:result[i+1], thumbnail:result[i+2]}
+              var json = {title:result[i], url:result[i+1],originUrl:sourceUrl, thumbnail:result[i+2]}
               holder.push(json)
             }
           }
