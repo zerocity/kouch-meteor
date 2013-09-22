@@ -138,7 +138,7 @@ Meteor.methods({
         logger.info('[SOURCE]',sourceUrl);
         Meteor.call('setState','Parsing ...'+sourceUrl);
 
-        cp.exec('youtube-dl -g -f 34/35/45/84/102 '+sourceUrl.toString(),function (error, stdout, stderr,stdin) {
+        cp.exec('youtube-dl -g -f 34/35/45/84/102/135/136 '+sourceUrl.toString(),function (error, stdout, stderr,stdin) {
           // parameter bug
           // -f choise prefeard video format http://en.wikipedia.org/wiki/YouTube#Quality_and_codecs
           if (error) {
@@ -172,16 +172,17 @@ Meteor.methods({
 
         logger.info('[YouTube]',sourceUrl);
         Meteor.call('setState','add to playlist ...'+ sourceUrl.title);
-        var parse = cp.spawn('youtube-dl',['-g','-f 34/35/45/84/102',sourceUrl.url.toString()])
-        //ge --get-thumbnail -f 34/35/45/84/102 '+sourceUrl.toString() 
+        var parse = cp.spawn('youtube-dl',['-g','-f 34/35/45/84/102/141/135/136/',sourceUrl.url.toString()])
+        //ge --get-thumbnail -f 34/35/45/84/102/135/136 '+sourceUrl.toString() 
         result = [] 
 
         parse.stdout.on('data', function (data) {
           result += data.toString()
         });
        
-        parse.stderr.on('data', function (data) {
-          logger.info('stderr: ' + data);
+        parse.stderr.on('data', function (error) {
+          logger.error('stderr: ' + error);
+
         });
 
         parse.on('close', function (code) {
@@ -210,16 +211,17 @@ Meteor.methods({
       if (typeof sourceUrl !== undefined) {
         logger.info('[API]',sourceUrl);
         Meteor.call('setState','get api call ...'+sourceUrl);
-        var parse = cp.spawn('youtube-dl',['-ge','--get-thumbnail','-f 34/35/45/84/102',sourceUrl.toString()])
-        //ge --get-thumbnail -f 34/35/45/84/102 '+sourceUrl.toString()
+        var parse = cp.spawn('youtube-dl',['-ge','--get-thumbnail','-f 34/35/45/84/102/141/135/136',sourceUrl.toString()])
+        //ge --get-thumbnail -f 34/35/45/84/102/135/136 '+sourceUrl.toString()
         result = [] 
 
         parse.stdout.on('data', function (data) {
           result += data.toString()
         });
        
-        parse.stderr.on('data', function (data) {
-          logger.info('stderr: ' + data);
+        parse.stderr.on('data', function (error) {
+          logger.error('stderr: ' + error);
+
         });
 
         parse.on('close', function (code) {

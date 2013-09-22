@@ -9,14 +9,14 @@ skipVideo = function(playlistId,queue){
       //Meteor.call('playerStop'); .... async ... player cant be closed like this ...
       logger.info('[CALL][PlAYER] Stop');
       cplayer.stdin.write('\nstop\n');
-
+      cplayer.stdout.removeAllListeners('data');
       player(playlistId); 
       //Meteor.call('playIt',playlistId)
     }else{
       //Meteor.call('playerStop'); .... async ... player cant be closed like this ...
       logger.info('[SKIP] to ',playlistId);
       cplayer.stdin.write('\nstop\n');
-
+      cplayer.stdout.removeAllListeners('data');
       player(playlistId); 
       //Meteor.call('playIt',playlistId)
     }
@@ -24,28 +24,24 @@ skipVideo = function(playlistId,queue){
 }
 
 // video finishes the next video in kk.playlist is played
-NextQueue = function(playlistId){
+NextQueue = function(){
   Fiber(function(){
     //todo add position list
     var kkId = Kouch.findOne();
-    logger.info('[KKID][OLD][POSITION] ',kkId.currentPosition, Date());
+    logger.info('[KKID][CURRENT POSITION] ',kkId.currentPosition, Date());
 
-    if (kkId.currentPosition == playlistId) {
-      var nextSourceUrl = kkId.playlist[kkId.playlist.indexOf(playlistId) + 1]; 
-      logger.info(kkId.playlist);
-      logger.info(kkId.playlist.indexOf(playlistId) + 1);
-    } else {
-      var nextSourceUrl = kkId.playlist[kkId.playlist.indexOf(kkId.currentPosition) + 1];
-      logger.info(kkId.playlist);
-      logger.info(kkId.playlist.indexOf(kkId.currentPosition) + 1);
-    }
+    var nextPlaylistId = kkId.playlist[kkId.playlist.indexOf(kkId.currentPosition) + 1];
 
-    if (typeof next != "undefined"){
+    console.log(kkId.playlist);
+    logger.info(kkId.playlist.indexOf(kkId.currentPosition) + 1);
+
+
+    if (typeof nextPlaylistId != "undefined"){
       logger.info('[PID] ',cplayer.pid)
-      logger.info('[NEXT]',nextSourceUrl);
-      updateIsPlaying(nextSourceUrl)
+      logger.info('[NEXT]',nextPlaylistId);
+      updateIsPlaying(nextPlaylistId)
       //cplayer.stdin.write('\nloadfile '+entry.url.trim()+'\n');
-      Meteor.call('playIt',nextSourceUrl)
+      Meteor.call('playIt',nextPlaylistId)
     }else{
       playerState.queue = false;
       playerState.play = false;
