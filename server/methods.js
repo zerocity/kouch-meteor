@@ -1,4 +1,7 @@
 Meteor.methods({
+  getIP : function(){
+    return playerState.ip
+  },
   addToPlaylist : function(type,entry){
     if (type == 'youtube') {
       var pl = Playlist.insert({
@@ -29,8 +32,6 @@ Meteor.methods({
     };
   },
   playIt : function(playlistId){
-
-
     if (typeof cplayer == "undefined") {
       // mplayer is not started
       logger.info('[URL]',playlistId)

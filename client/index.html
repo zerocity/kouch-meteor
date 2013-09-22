@@ -15,7 +15,8 @@
 				<li><a href="/queue/" class="btn button btn-primary">Queue</a></li>
 				<li><a href="/remote/" class="btn button btn-primary">Remote</a></li>
 				<li><a href="/history/" class="btn button "><span class="glyphicon glyphicon-time"></span></a></li>
-			</ul>
+				<li><a href="javascript:(function(){ window.open('http://{{getIP}}:3000/api/url/h' + encodeURIComponent(location.href)); })();" onclick="return false" style="cursor:default;"> <span class="label label-default"> Kouch </span> </a> </li> 
+				</ul>
 	  </header>
 
 			<div class="main">

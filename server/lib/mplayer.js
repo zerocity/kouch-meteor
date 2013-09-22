@@ -24,7 +24,7 @@ callbackOnData = function(data){
     if (isStopped(data)) {
       // remove the event listener cplayer.stdout.on DATA 
       this.removeListener('data', callbackOnData);
-      console.log('callback ',this);
+      //console.log('callback ',this);
       setNextVideo();
     }
   } else {
@@ -66,7 +66,6 @@ getClose = function(cplayer){
     logger.info('[PLAYER] close ',cplayer.pid);
   });
 };
-
 
 player = function(playlistId) {
   //highlighting the current played /selected item
@@ -116,7 +115,4 @@ player = function(playlistId) {
   } else {
     logger.error('DB ',entry)
   }
-
-
-
 }

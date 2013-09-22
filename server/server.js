@@ -2,7 +2,8 @@ Meteor.startup(function () {
   //global
   log = true;
   cp = Npm.require('child_process');
-  util = Npm.require('util');
+  dns = Npm.require('dns');
+  os = Npm.require('os');
   cplayer = undefined;
   playerState = {
     skip : false, 
@@ -10,8 +11,10 @@ Meteor.startup(function () {
     mute : false,
     queue : false,
     playerRun : false,
-    stop : true
+    stop : true,
+    ip : os.networkInterfaces()['wlan0'][0]['address']
   }
+
   Fiber = Npm.require("fibers");
 
   var fs = Npm.require('fs');
@@ -29,7 +32,7 @@ Meteor.startup(function () {
     ]
   });
 
-
+playerState.ip = os.networkInterfaces()['wlan0'][0]['address'];
 
 /*cplayer = cp.spawn('mplayer',['-slave','-idle','-fs','-cache-min','50']);
 
