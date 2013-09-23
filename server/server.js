@@ -2,8 +2,7 @@ Meteor.startup(function () {
   //global
   log = true;
   cp = Npm.require('child_process');
-  dns = Npm.require('dns');
-  os = Npm.require('os');
+  //os = Npm.require('os');
   Fiber = Npm.require("fibers");
 
   var fs = Npm.require('fs');
@@ -27,7 +26,7 @@ Meteor.startup(function () {
     ]
   });
 
-playerState.ip = os.networkInterfaces()['wlan0'][0]['address'];
+playerState.ip = '10.20.30.51'//os.networkInterfaces()['wlan0'][0]['address'];
 
 /*cplayer = cp.spawn('mplayer',['-slave','-idle','-fs','-cache-min','50']);
 

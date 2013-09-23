@@ -11,6 +11,10 @@ Template.search.events({
         var max_videos = 12;
         Meteor.http.call("GET", "http://gdata.youtube.com/feeds/api/videos",
           {params: {q: query,'max-results':max_videos,alt:'json'}}, function(error,result) {
+            if (error) {
+              console.error(error);
+            }
+
             var simpleJson = JSON.parse(result.content).feed.entry ;
             var data = _.map(simpleJson, function (num,key){            
               var a = num.id.$t.split("/"),

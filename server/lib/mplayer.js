@@ -51,6 +51,7 @@ getError = function(cplayer){
 };
 
 getData = function(cplayer){
+  logger.info('is playing')
   cplayer.stdout.on('data', callbackOnData);
 };
 
