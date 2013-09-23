@@ -1,3 +1,9 @@
+Meteor.call('getList',function (error,results){
+  if (error)
+    console.log(error);
+  Session.set('getList',results)
+});
+
 Template.queue.settings = function () {
   if (Session.get('data_loaded')) {
     return Kouch.findOne({})
@@ -9,17 +15,7 @@ Template.queue.meteorstatus = function () {
 };
 
 Template.queue.getPlaylist = function () {
-  if (Session.get('data_loaded')) {
-    var kk = Kouch.findOne({});   
-
-    if (typeof kk.playlist != 'undefined') {
-      var pl =  Playlist.find({
-       '_id': { $in : kk.playlist }
-      }).fetch();
-      return pl 
-    }
-      
-  };
+  return Session.get('getList')
 };
 
 Template.queue.playerState = function() {

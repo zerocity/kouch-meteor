@@ -115,8 +115,7 @@ Meteor.methods({
   },
   getList : function(){
      var queue = Kouch.findOne({});
-     var pla = Playlist.find({'_id': { $in : queue.playlist } }).fetch(); 
-     return pla
+     return Playlist.find({'_id': { $in : queue.playlist } }).fetch(); 
   },
   setState : function(state){
     kk = Kouch.findOne({})
