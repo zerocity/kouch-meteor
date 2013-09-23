@@ -4,6 +4,11 @@ Meteor.startup(function () {
   cp = Npm.require('child_process');
   dns = Npm.require('dns');
   os = Npm.require('os');
+  Fiber = Npm.require("fibers");
+
+  var fs = Npm.require('fs');
+  var path = Npm.require('path');
+  var base = path.resolve('../../../../../');
   cplayer = undefined;
   playerState = {
     skip : false, 
@@ -12,19 +17,9 @@ Meteor.startup(function () {
     queue : false,
     playerRun : false,
     stop : true,
-    ip : os.networkInterfaces()['wlan0'][0]['address']
   }
-
-  Fiber = Npm.require("fibers");
-
-  var fs = Npm.require('fs');
-  var path = Npm.require('path');
-  var base = path.resolve('../../../../../');
-
   console.log(base);
-
   winston = Winston;
-
   logger = new (winston.Logger)({
     transports: [
       new (winston.transports.Console) (),
