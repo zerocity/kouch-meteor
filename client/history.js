@@ -8,21 +8,12 @@ Template.history.list = function () {
 
 Template.history.events({
   'click .playStart' : function(event){
-    //
-    // ##### parseWeb
-    //
-
-    console.log('Event',event);
-    console.log('This',this);
-
-    if (this.youtubeId) {
-      console.log('[Q][play] '+ this._id);
-      Meteor.call('parseWeb',this._id);
-    }else{
-      console.log('[ERROR] :',this);
-      console.log('[ERROR] :',event);
-    }
-
-
+    console.log('[H][play] '+ this._id);
+    Meteor.call('playIt',this._id);
+    console.log('[THIS] :',this);
+  },
+  'click .del' :function(event){
+    console.log(this);
+    Meteor.call('delPlaylistEntry',this._id);
   }
 });

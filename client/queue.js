@@ -1,8 +1,21 @@
-Meteor.call('getList',function (error,results){
-  if (error)
-    console.log(error);
-  Session.set('getList',results)
+Deps.autorun(function () {
+ var queue = Kouch.findOne({});
+  if (typeof queue != "undefined") {
+    if (typeof queue.playlist != 'undefined') {
+      var pl =  Playlist.find({
+       '_id': { $in : queue.playlist }
+      }).fetch();
+      Session.set('getList',pl);
+    }       
+  }
 });
+/*
+  Meteor.call('getList',function (error,results){
+    if (error)
+      console.log(error);
+      Session.set('getList',results)
+  });
+});*/
 
 Template.queue.settings = function () {
   if (Session.get('data_loaded')) {

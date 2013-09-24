@@ -1,5 +1,79 @@
+getParseData = function(parse){
+  parse.stdout.on('data', function (data) {
+    result += data.toString()
+  });
+};
+
+getParseDataError = function(parse){
+  parse.stderr.on('data', function (error) {
+    logger.error('stderr: ' + error);
+  });
+};  
+
+getParseResults = function(parse,api,sourceUrl){
+  // save parse results in the DB and close eventListens
+  parse.on('close', function (code) {
+    if (typeof api != "undefined") {
+      if (typeof result != "undefined" ) {            
+        
+        if (api == 'youtube') {
+          logger.info('result from YouTube ',result)
+          Fiber(function(){
+            var pl = Playlist.insert({type:api,
+              url:result,
+              originUrl:sourceUrl.url,
+              youtubeId:sourceUrl.youtubeId,
+              title:sourceUrl.title,
+              thumbnail:sourceUrl.thumbnail,
+              description:sourceUrl.description,
+              duration:sourceUrl.duration,
+              date:Date.now(),
+              isPlaying:false
+            });
+            logger.info('[CALL][ADD][TO]QUEUE][INSERT][YouTube]',pl);
+            Kouch.update({'_id':kkId._id},{'$push':{ 'playlist':pl}}); 
+          }).run();
+        }
+
+        if (api == 'api'){
+          logger.info('[START INSERT]')
+
+          if (typeof result == "string") {
+            result = result.split('\n')
+            holder = []
+
+            console.log('test');
+            // if it is a playlist 
+            for (i=0;i<result.length;i+=3){
+              if (result[i].length > 0){
+                var json = {title:result[i], url:result[i+1],originUrl:sourceUrl, thumbnail:result[i+2]}
+                holder.push(json)
+              }
+            }
+
+            logger.info(holder ,typeof holder, holder.length)
+            Fiber(function(){
+              for (i=0;i<holder.length;i++){
+                pl = Playlist.insert(holder[i])
+                logger.info('[CALL][ADD][TO]QUEUE][INSERT][API]',pl);
+                Kouch.update({'_id':kkId._id},{'$push':{ 'playlist':pl}}); 
+              }
+            }).run();
+
+          } else {
+            logger.info(typeof result)
+          }
+
+          logger.info('child process exited with code ' + code);
+        }
+      }
+    }
+  });
+}
+
 Meteor.methods({
   getIP : function(){
+    //
     return playerState.ip
   },
   addToPlaylist : function(type,entry){
@@ -65,17 +139,6 @@ Meteor.methods({
       playerState.queue = false
       logger.info('[PlAYER][QUEUE][MODE] OFF');
     }
-  },   
-  playerFullscreen : function(){
-    if (playerState.play) {
-      logger.info('[CALL] Fullscreen');
-      cplayer.stdin.write('\nf\n');
-    }
-  },
-  getQueue : function(){
-    logger.info('[CALL][QUEUE] Next');
-    getQueue();
-    //return Queue.find({}).fetch()
   },
   delPlaylistEntry : function(id){
     logger.info('\n[DEL][ENTRY] ',id);
@@ -84,11 +147,7 @@ Meteor.methods({
     var pos = kk.playlist.indexOf(id)
     kk.playlist.splice(pos,1)
     Kouch.update({'_id':kk._id},{ $set :{'playlist':kk.playlist}});
-  },/*
-  getPlaylist : function(){
-    var pl = Playlist.find({}).fetch();   
-    return pl
-  },*/
+  },
   startStream : function(){
     logger.info('[CALL]Start Stream: ');
     cp.exec('livestreamer twitch.tv/nl_kripp 480p --player mplayer',function (error, stdout, stderr,stdin) {
@@ -106,22 +165,22 @@ Meteor.methods({
      };
     });
   },
-  getPlayerState : function(){
-    return playerState;
-  },
-  setPlayerState : function(key,value){
-    logger.info(playerState[key])
-    logger.info('[NEW][value] ',value);
-  },
   getList : function(){
-     var queue = Kouch.findOne({});
-     return Playlist.find({'_id': { $in : queue.playlist } }).fetch(); 
+    var queue = Kouch.findOne({});
+    if (typeof queue != "undefined") {
+      if (typeof queue.playlist != 'undefined') {
+        var pl =  Playlist.find({
+         '_id': { $in : queue.playlist }
+        }).fetch();
+        return pl 
+      }       
+    }
   },
   setState : function(state){
     kk = Kouch.findOne({})
     Kouch.update({'_id':kk._id},{ $set :{'state':state}});
   },
-  parseWeb : function(playlistId) {
+/*  parseWeb : function(playlistId) {
 
     if (playerState.play == true) {
       logger.info('[CALL][NEW][VIDEO] ',playlistId);
@@ -164,99 +223,32 @@ Meteor.methods({
         logger.info(playlistId);
       };   
     }
-  },
+  },*/
   analyse : function(api,sourceUrl){
-    if (api=='youtube') {
-    logger.info(api)
-      if (typeof sourceUrl !== undefined) {
+    result = [] 
+    var videoCodexs = '-f 34/35/43/45/84/102/141/135/136/'
 
-        logger.info('[YouTube]',sourceUrl);
-        Meteor.call('setState','add to playlist ...'+ sourceUrl.title);
-        var parse = cp.spawn('youtube-dl',['-g','-f 34/35/45/84/102/141/135/136/',sourceUrl.url.toString()])
-        //ge --get-thumbnail -f 34/35/45/84/102/135/136 '+sourceUrl.toString() 
-        result = [] 
-
-        parse.stdout.on('data', function (data) {
-          result += data.toString()
-        });
-       
-        parse.stderr.on('data', function (error) {
-          logger.error('stderr: ' + error);
-
-        });
-
-        parse.on('close', function (code) {
-
-          logger.info('result from YouTube ',result)
-
-          Fiber(function(){
-            var pl = Playlist.insert({type:api,
-              url:result,
-              originUrl:sourceUrl.url,
-              youtubeId:sourceUrl.youtubeId,
-              title:sourceUrl.title,
-              thumbnail:sourceUrl.thumbnail,
-              description:sourceUrl.description,
-              duration:sourceUrl.duration,
-              date:Date.now(),
-              isPlaying:false
-            });
-            logger.info('[CALL][ADD][TO]QUEUE][INSERT][YouTube]',pl);
-            Kouch.update({'_id':kkId._id},{'$push':{ 'playlist':pl}}); 
-          }).run();
-        });
-      //end of typeof IF 
-      }
-    } else if (api == 'api') {
-      if (typeof sourceUrl !== undefined) {
-        logger.info('[API]',sourceUrl);
-        Meteor.call('setState','get api call ...'+sourceUrl);
-        var parse = cp.spawn('youtube-dl',['-ge','--get-thumbnail','-f 34/35/45/84/102/141/135/136',sourceUrl.toString()])
-        //ge --get-thumbnail -f 34/35/45/84/102/135/136 '+sourceUrl.toString()
-        result = [] 
-
-        parse.stdout.on('data', function (data) {
-          result += data.toString()
-        });
-       
-        parse.stderr.on('data', function (error) {
-          logger.error('stderr: ' + error);
-
-        });
-
-        parse.on('close', function (code) {
-          result = result.split('\n')
-          logger.info('[START INSERT]')
-          holder = []
-          for (i=0;i<result.length;i+=3){
-            if (result[i].length > 0){
-              var json = {title:result[i], url:result[i+1],originUrl:sourceUrl, thumbnail:result[i+2]}
-              holder.push(json)
-            }
-          }
-          
-          logger.info(holder ,typeof holder, holder.length)
-          
-          Fiber(function(){
-            for (i=0;i<holder.length;i++){
-              pl = Playlist.insert(holder[i])
-              logger.info('[CALL][ADD][TO]QUEUE][INSERT][API]',pl);
-              Kouch.update({'_id':kkId._id},{'$push':{ 'playlist':pl}}); 
-            }
-          }).run();
-
-          logger.info('child process exited with code ' + code);
-        });
-      };
+    if(api == 'youtube'){
+      var options = [' -g'];
+      options.push(sourceUrl.url.toString().trim());
     }
 
-  }
+    if(api == 'api'){
+      var options = ['-ge','--get-thumbnail'];
+      options.push(sourceUrl.toString().trim());
+    }
 
+    if (typeof sourceUrl !== undefined ) {
+      logger.info('[METHODS] ',api,sourceUrl);
+      Meteor.call('setState','add to playlist ...'+ sourceUrl.title); // frontent notification
+
+      console.log(options);
+
+      var parse = cp.spawn('youtube-dl',[options[0],options[1],videoCodexs,options[2]]);
+      getParseData(parse);
+      getParseDataError(parse);
+      getParseResults(parse,api,sourceUrl,result)
+    }
+  }
   //end of Meteror.methods
 });
-
-/*        if (error) {
-          logger.info(error.stack);
-          logger.info('Error code: '+error.code);
-          logger.info('Signal received: '+error.signal);
-        }*/  
