@@ -26,6 +26,6 @@ Meteor.startup(function () {
     ]
   });
 
-playerState.ip = '10.20.30.235:3000'//os.networkInterfaces()['wlan0'][0]['address'];
+playerState.ip = '10.20.30.51'//os.networkInterfaces()['wlan0'][0]['address'];
 
 });
