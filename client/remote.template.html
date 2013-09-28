@@ -1,27 +1,56 @@
 <template name="remote">
 
-  <div class="btn-group">
-	   <div class="padding-left padding-right padding-top btn-group btn-group-justified ">
-      <a href="#" class="btn button btn-default backward"><span class="glyphicon glyphicon-fast-backward"></span></a>
-      <a href="#" class="btn button btn-default left"><span class="glyphicon glyphicon-backward"></span></a>
-      <a href="#" class="btn button btn-default pause"><span class="glyphicon glyphicon-play"></span><span class="glyphicon glyphicon-pause"></span>&nbsp;</a>
-      <a href="#" class="btn button btn-default stop"><span class="glyphicon glyphicon-stop"></span></a>
-      <a href="#" class="btn button btn-default right"><span class="glyphicon glyphicon-forward"></span></a>
-      <a href="#" class="btn button btn-default forward"><span class="glyphicon glyphicon-fast-forward"></span></a>
-      <a href="#" class="btn button btn-default toggle-sound" ><span class="glyphicon glyphicon-volume-up"></span> </a>
-      <a href="#" class="btn button btn-default queueMode"><span class="glyphicon glyphicon-retweet"></a>
+  <div class="btn-group remote">
+	   <div class="padding-left padding-right padding-top btn-group">
+
+      <button class="btn button btn-default remote backward">
+        <span class="glyphicon glyphicon-fast-backward"></span>
+      </button>
+
+      <button class="btn button btn-default remote left">
+        <span class="glyphicon glyphicon-backward"> </span>
+      </button>
+
+      <button class="btn button btn-default remote pause">
+        {{#if playerState.play}} 
+            &nbsp;<span class="glyphicon glyphicon-pause"></span>&nbsp;
+          {{else}}
+            &nbsp;<span class="glyphicon glyphicon-play"></span>&nbsp;
+        {{/if}}
+      </button>
+
+      <button class="btn button btn-default remote stop">
+        <span class="glyphicon glyphicon-stop"></span>
+      </button>
+
+      <button class="btn button btn-default remote right">
+        <span class="glyphicon glyphicon-forward"> </span>
+      </button>
+
+      <button class="btn button btn-default remote forward">
+        <span class="glyphicon glyphicon-fast-forward"></span>
+      </button>
+
+      <button class="btn button btn-default remote toggle-sound" >
+        <span class="glyphicon glyphicon-volume-up"></span>
+      </button>
+
+      <button class="btn button remote {{#if playerState.queue}} btn-success {{else}} btn-default  {{/if}}  queueMode">
+      <span class="glyphicon glyphicon-retweet">
+      </button>
+
     </div>
   </div>
   <div class="padding-left padding-right padding-top btn-group btn-group-justified hide"> <!-- Isn't used but maybe later again -->
     <div class="btn-group">
-  		<a class="btn button btn-primary vol-down" ><span class="glyphicon glyphicon-volume-down"></span></a>
-  		<a class="btn button btn-primary mute" ><span class="glyphicon glyphicon-volume-off"></span> </a>
-  		<a class="btn button btn-primary vol-up" ><span class="glyphicon glyphicon-volume-up"></span></a>
+  		<a class="btn button btn-primary vol-down" ><span class="glyphicon glyphicon-volume-down"></span>&nbsp;</a>
+  		<a class="btn button btn-primary mute" ><span class="glyphicon glyphicon-volume-off"></span>&nbsp; </a>
+  		<a class="btn button btn-primary vol-up" ><span class="glyphicon glyphicon-volume-up"></span>&nbsp;</a>
     </div>
   </div>
   <div class="volslider hide">
   <p>Volume</p>
-      <input class= "progress" type="range" name="slider" id="slider" value="0" min="0" max="100"  />
+      <input class= "progress" type="range" name="slider" id="slider" value="{{playerState.volume}}" min="0" max="100"  />
   </div>
 
 

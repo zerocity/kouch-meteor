@@ -9,7 +9,8 @@
       "iron-router": {},
       "winston": {},
       "winston-loggly": {},
-      "reststop": {}
+      "reststop": {},
+      "semantic-ui": {}
     },
     "packages": {
       "npm": {
@@ -51,6 +52,11 @@
         "git": "https://github.com/gkoberger/meteor-reststop.git",
         "tag": "v0.4.0",
         "commit": "653e6d5354ed1b37095b19ef67021c01ce59827e"
+      },
+      "semantic-ui": {
+        "git": "https://github.com/nooitaf/meteor-semantic-ui.git",
+        "tag": "v0.0.2",
+        "commit": "9a8c6035ffc34933e30256405d07b3a657595ca7"
       },
       "page-js-ie-support": {
         "git": "https://github.com/tmeasday/meteor-page-js-ie-support.git",

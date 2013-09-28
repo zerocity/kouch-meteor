@@ -81,6 +81,7 @@ Meteor.methods({
   volume : function(slider){
     if (cplayer.pid) {
       logger.info('[CALL][PlAYER] Vol set to:',slider);
+      playerState.volume = slider;
       cplayer.stdin.write('\nvolume '+slider +' 1\n');
     }
     //cplayer.stdin.write('\nvolume 10\n');      

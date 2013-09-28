@@ -1,5 +1,5 @@
 Deps.autorun(function () {
- var queue = Kouch.findOne({});
+  var queue = Kouch.findOne({});
   if (typeof queue != "undefined") {
     if (typeof queue.playlist != 'undefined') {
       var pl =  Playlist.find({
@@ -9,13 +9,6 @@ Deps.autorun(function () {
     }       
   }
 });
-/*
-  Meteor.call('getList',function (error,results){
-    if (error)
-      console.log(error);
-      Session.set('getList',results)
-  });
-});*/
 
 Template.queue.settings = function () {
   if (Session.get('data_loaded')) {
@@ -23,19 +16,9 @@ Template.queue.settings = function () {
   };
 };
 
-Template.queue.meteorstatus = function () {
-  return Meteor.status().connected;
-};
-
 Template.queue.getPlaylist = function () {
   return Session.get('getList')
 };
-
-Template.queue.playerState = function() {
-  var kk = Kouch.findOne({});   
-  console.log(kk);
-  return kk
-}
 
 Template.queue.events({
   'click .playStart' : function(event){

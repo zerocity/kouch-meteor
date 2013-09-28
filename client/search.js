@@ -42,33 +42,7 @@ Template.search.events({
       }      
   },  
   'click .addToPlaylist' : function(data){
-    //
-    // ##### parseWeb
-    //
     var query = $('#query').val();
-    console.log('[QUERY] ',query);
     Meteor.call('analyse','youtube',this)
-    //Meteor.call('addToPlaylist','youtube',this,function(err,res){
-    //console.log('[ADD][TO][QUEUE] ',res);
-    //});
-  },
-  'click .play' : function(data){
-    var query = $('#query').val();
-    console.log('[QUERY] ',query);
-
-    var video = Meteor.call('addToPlaylist','youtube',this,function(err,res){
-      console.log('[ADD][TO][QUEUE] and play ',res);
-      Meteor.call('parseWeb',res);
-    });
   }
-  
 });
-/*    Meteor.call('addToPlaylist',query,this,function (error,playlist) {
-      if (data.toElement.dataset.id) {
-        console.log('[log][Playlist] '+ data.toElement.dataset.id,' [DB][RESULTS] ',playlist);
-        Meteor.call('parseWeb',data.toElement.dataset.id,playlist._id);
-      }else{
-        console.error('[log][addToPlaylist] no dataset set',playlist);
-        //Meteor.call('parseWeb',data.toElement.dataset.id,results);
-      }
-    });*/

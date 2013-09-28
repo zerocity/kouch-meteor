@@ -16,6 +16,7 @@ Meteor.startup(function () {
     queue : false,
     playerRun : false,
     stop : true,
+    volume : 65
   }
   console.log(base);
   winston = Winston;
