@@ -75,7 +75,6 @@ player = function(playlistId) {
   updateIsPlaying(playlistId);
   playerState.stop = false;
 
-
   if (typeof entry.url != "undefined" ) {
     if(typeof cplayer != "undefined"){
       // remove previous event listeners
@@ -99,6 +98,9 @@ player = function(playlistId) {
       logger.info(entry);
       //cplayer = cp.spawn('mplayer ',[entry.url.trim()]); '-cache-min','20' 
       cplayer = cp.spawn('mplayer',['-idle','-fs',entry.url.trim()]);
+/*
+      logger.info('[MPLAYER]',entry.date)
+      logger.info('[MPLAYER]',entry.date)*/
       
       playerState.play = true;
       logger.info('PID',cplayer.pid)

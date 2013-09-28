@@ -17,7 +17,7 @@ getParseResults = function(parse,api,sourceUrl){
       if (typeof result != "undefined" ) {            
         
         if (api == 'youtube') {
-          logger.info('result from YouTube ',result)
+          logger.info('[METHODS] result from YouTube ',result)
           Fiber(function(){
             var pl = Playlist.insert({type:api,
               url:result,
@@ -30,13 +30,13 @@ getParseResults = function(parse,api,sourceUrl){
               date:Date.now(),
               isPlaying:false
             });
-            logger.info('[CALL][ADD][TO]QUEUE][INSERT][YouTube]',pl);
+            logger.info('[METHODS][INSERT][YouTube]',pl);
             Kouch.update({'_id':kkId._id},{'$push':{ 'playlist':pl}}); 
           }).run();
         }
 
         if (api == 'api'){
-          logger.info('[START INSERT]')
+          logger.info('[METHODS][START INSERT]')
 
           if (typeof result == "string") {
             result = result.split('\n')
@@ -51,17 +51,17 @@ getParseResults = function(parse,api,sourceUrl){
               }
             }
 
-            logger.info(holder ,typeof holder, holder.length)
+            //logger.info(holder ,typeof holder, holder.length)
             Fiber(function(){
               for (i=0;i<holder.length;i++){
                 pl = Playlist.insert(holder[i])
-                logger.info('[CALL][ADD][TO]QUEUE][INSERT][API]',pl);
+                logger.info('[METHODS][INSERT][API]',pl);
                 Kouch.update({'_id':kkId._id},{'$push':{ 'playlist':pl}}); 
               }
             }).run();
 
           } else {
-            logger.info(typeof result)
+            logger.info('[METHODS] result is not a string',result,typeof result)
           }
 
           logger.info('child process exited with code ' + code);
@@ -90,7 +90,7 @@ Meteor.methods({
         isPlaying:false
       });
 
-      logger.info('[CALL][ADD][TO]QUEUE][INSERT][YOUTUBE] ',pl);
+      logger.info('[METHODS][YOUTUBE] ',pl);
       Kouch.update({'_id':kkId._id},{'$push':{ 'playlist':pl}});    
       return pl
     } else if (type == 'api'){
@@ -100,7 +100,7 @@ Meteor.methods({
         date:Date.now(),
         isPlaying:false
       });
-      logger.info('[CALL][ADD][TO]QUEUE][INSERT]['+type+']',pl);
+      logger.info('[METHODS][INSERT]['+type+']',pl);
       Kouch.update({'_id':kkId._id},{'$push':{ 'playlist':pl}});    
       return pl      
     };
@@ -108,24 +108,22 @@ Meteor.methods({
   playIt : function(playlistId){
     if (typeof cplayer == "undefined") {
       // mplayer is not started
-      logger.info('[URL]',playlistId)
+      logger.info('[METHODS][PLAYIT][URL]',playlistId)
       player(playlistId); 
       playerState.stop == false
     } else {
-
-      logger.info(playlistId)
-      logger.info(playerState) 
 
       if (playerState.skip == true) {
         playerState.skip = false
         playerState.queue = true
       }
+
       if (playerState.stop == true && typeof playlistId == "undefined" ) {
-        logger.info('[CALL][PlAYER] next QUEUE');
+        logger.info('[METHODS][PLAYIT] next QUEUE');
         playerState.stop == false 
         NextQueue();
       }else{
-        logger.info('playit')
+        logger.info('[METHODS] Start mplayer ')
         player(playlistId); 
       }
     
@@ -134,14 +132,14 @@ Meteor.methods({
   queueMode : function(){
     if (playerState.queue == false) {
       playerState.queue = true;
-      logger.info('[PlAYER][QUEUE][MODE] ON');
+      logger.info('[METHODS][QUEUE][MODE] ON');
     }else{
       playerState.queue = false
-      logger.info('[PlAYER][QUEUE][MODE] OFF');
+      logger.info('[METHODS][QUEUE][MODE] OFF');
     }
   },
   delPlaylistEntry : function(id){
-    logger.info('\n[DEL][ENTRY] ',id);
+    logger.info('[METHODS][DEL][ENTRY] ',id);
     check(id, String)
     var kk = Kouch.findOne({})
     var pos = kk.playlist.indexOf(id)
@@ -149,7 +147,7 @@ Meteor.methods({
     Kouch.update({'_id':kk._id},{ $set :{'playlist':kk.playlist}});
   },
   startStream : function(){
-    logger.info('[CALL]Start Stream: ');
+    logger.info('[METHODS]Start Stream: ');
     cp.exec('livestreamer twitch.tv/nl_kripp 480p --player mplayer',function (error, stdout, stderr,stdin) {
       // parameter bug
       // -f choise prefeard video format http://en.wikipedia.org/wiki/YouTube#Quality_and_codecs
@@ -166,7 +164,8 @@ Meteor.methods({
     });
   },
   getList : function(){
-    var queue = Kouch.findOne({});
+    // return the playlist with only queue elements
+    var queue = Kouch.findOne({});//have only the playlist ids not the full entry --> This cann be found under playlist collection .... bad name i now 
     if (typeof queue != "undefined") {
       if (typeof queue.playlist != 'undefined') {
         var pl =  Playlist.find({
@@ -228,27 +227,26 @@ Meteor.methods({
     result = [] 
     var videoCodexs = '-f 34/35/43/45/84/102/141/135/136/'
 
-    if(api == 'youtube'){
-      var options = [' -g'];
-      options.push(sourceUrl.url.toString().trim());
-    }
-
-    if(api == 'api'){
-      var options = ['-ge','--get-thumbnail'];
-      options.push(sourceUrl.toString().trim());
-    }
-
     if (typeof sourceUrl !== undefined ) {
-      logger.info('[METHODS] ',api,sourceUrl);
-      Meteor.call('setState','add to playlist ...'+ sourceUrl.title); // frontent notification
+        logger.info('[METHODS] ',api,sourceUrl);
 
-      console.log(options);
+      if(api == 'youtube'){
+        Meteor.call('setState','add to playlist ...'+ sourceUrl.title); // frontent notification
+        var options = ['-g'];
+        options.push(sourceUrl.url.toString().trim());
+        var parse = cp.spawn('youtube-dl',[options[0],videoCodexs,options[1]]);
+      }
 
-      var parse = cp.spawn('youtube-dl',[options[0],options[1],videoCodexs,options[2]]);
-      getParseData(parse);
-      getParseDataError(parse);
-      getParseResults(parse,api,sourceUrl,result)
-    }
+      if(api == 'api'){
+        Meteor.call('setState','add to playlist ...'+ sourceUrl); // frontent notification
+        var options = ['-ge','--get-thumbnail'];
+        options.push(sourceUrl.toString().trim());
+        var parse = cp.spawn('youtube-dl',[options[0],options[1],videoCodexs,options[2]]);
+      }
+        getParseData(parse);
+        getParseDataError(parse);
+        getParseResults(parse,api,sourceUrl,result)
+      }
   }
   //end of Meteror.methods
 });

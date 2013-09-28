@@ -27,6 +27,7 @@ Meteor.startup(function () {
   });
 
 playerState.ip = '10.20.30.51'//os.networkInterfaces()['wlan0'][0]['address'];
+<<<<<<< HEAD
 
 /*cplayer = cp.spawn('mplayer',['-slave','-idle','-fs','-cache-min','50']);
 
@@ -91,5 +92,7 @@ NextQueue();*/
       console.log('[FIND][Kouch] ',kkId);
     }).run();
 }*/
+=======
+>>>>>>> master
 
 });
