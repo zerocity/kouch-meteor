@@ -50,7 +50,19 @@ git clone https://github.com/zerocity/kouch-meteor.git
 cd kouch-meteor
 mrt
 ```
- 
+
+## Start kouch Lounge USB stick
+
+´´´bash
+acc kouch
+pw kouch
+
+export DISPLAY:=0
+
+meteor --port :80
+´´´
+
+
 ## TODOS
 
 - integration of REST interface (required for bookmarklet)
