@@ -41,8 +41,11 @@ Template.search.events({
           });
       }      
   },  
-  'click .addToPlaylist' : function(data){
+  'click .addToPlaylist' : function(event){
     var query = $('#query').val();
-    Meteor.call('analyse','youtube',this)
+    Meteor.call('analyse','youtube',this,function (error, result) {
+      //console.log(event.toElement);
+      console.log('test',$(event.toElement).addClass("btn-success"));
+    })
   }
 });

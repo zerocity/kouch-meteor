@@ -4,7 +4,7 @@ skipVideo = function(playlistId,queue){
   //Fiber(function(){
     if (queue) {
       playerState.skip = true
-      playerState.queue = false
+      //playerState.queue = false
       logger.info('[SKIP][QUEUE] ',playlistId);
       //Meteor.call('playerStop'); .... async ... player cant be closed like this ...
       logger.info('[CALL][PlAYER] Stop');

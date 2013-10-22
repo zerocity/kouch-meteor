@@ -11,6 +11,11 @@ Template.remote.playerState = function() {
   return Session.get('getState')
 }
 
+Template.remote.currentVideo = function() {
+  Session.set('currentVideo',Playlist.findOne({'isPlaying' :true}))
+  return Session.get('currentVideo')
+}
+
 Template.remote.events({
   'click .toggle-sound' : function(event){
     $('.volslider').toggleClass('hide');
@@ -38,12 +43,11 @@ Template.remote.events({
     Meteor.call('playerPause');
     console.log('[log][PAUSE] ');
   },
-  'click .pause' :function(event){
+  'click .playThis' : function(event){
     //
     // ##### playerStart
     //
-    Meteor.call('playerPause');
-    console.log('[log][START] ');
+    Meteor.call('playIt',Session.get('currentVideo')._id);
   },
   'click .stop' :function(event){
     //

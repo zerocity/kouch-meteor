@@ -71,6 +71,7 @@ getClose = function(cplayer){
 player = function(playlistId) {
   //highlighting the current played /selected item
   entry = Playlist.findOne(playlistId);
+  console.log(entry);
   logger.info('[ENTRY]',entry.title ,entry._id);
   updateIsPlaying(playlistId);
   playerState.stop = false;

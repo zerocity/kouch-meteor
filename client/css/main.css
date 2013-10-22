@@ -1,0 +1,37 @@
+footer{
+	padding-left: 5px;	
+}
+
+.padding-top{
+	padding-top: 5px;
+}
+
+.playing{
+	background-color: #FFFED1;
+}
+
+.padding-bottom{
+	padding-bottom: 20px;
+}
+
+.padding-left{
+	padding-left: 20px;
+}
+
+.padding-right{
+	padding-right: 15px;
+}
+
+.volslider{
+	padding: 10px;
+	margin: 5px;
+}
+
+.progress{
+	width: 100%;
+	height: 30px;
+}
+
+.container{
+	padding: 5px;
+}
