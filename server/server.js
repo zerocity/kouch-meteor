@@ -4,7 +4,6 @@ Meteor.startup(function () {
   cp = Npm.require('child_process');
   //os = Npm.require('os');
   Fiber = Npm.require("fibers");
-  mime = Npm.require('mime');
 
   var fs = Npm.require('fs');
   var path = Npm.require('path');

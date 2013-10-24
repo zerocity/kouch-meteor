@@ -1,21 +1,21 @@
 <template name="queue">
 	<div class="row">
 		{{>remote}}
-		<div class="video padding-top padding-bottom " style="display: block;">
+		<div class="video padding-top padding-bottom padding-right" style="display: block;">
 			{{#if getPlaylist }}	
 				{{#each getPlaylist}}
-					<div class="media {{#if isPlaying }} playing {{/if}}">
+					<div class="media media-ttc {{#if isPlaying }} playing {{/if}}">
 					  <a class="pull-left" href="#">
 					    <img class="media-object" style="width: 64px; height: 64px;" src="{{thumbnail}}">
 					  </a>
 					  <div class="media-body">
 					    <h4 class="media-heading">{{title}}</h4>
-							<button type="button " class="btn btn-primary playStart" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-url="{{url}}" data-id="{{youtubeId}}">
+							<button type="button " class="btn btn-ttc btn-primary playStart" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-url="{{url}}" data-id="{{youtubeId}}">
 								<span class="glyphicon glyphicon-play"></span>
 								play
 							</button>
 
-							<button type="button " class="btn btn-primary del" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-url="{{url}}" data-id="{{youtubeId}}">
+							<button type="button " class="btn btn-ttc btn-primary del" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-url="{{url}}" data-id="{{youtubeId}}">
 								<span class="glyphicon glyphicon-trash"></span>
 							</button>
 	

@@ -1,5 +1,12 @@
 body{
-	background-color: #000;
+	font-family: Calibri,Tahoma,"Lucida Sans Unicode","Lucida Grande",verdana,sans,Arial,geneva,sans-serif;
+	font-size: 14px;
+	font-size: 1.4rem;
+	font-weight: 400;
+	color: #7E7E7E;
+	background: #1E1E1E;
+	overflow-x: hidden;
+	height: 100%;
 }
 
 footer{
@@ -10,9 +17,9 @@ footer{
 .btn-ttc:hover,
 .btn-ttc:active {
   color: white;
-  border-color: #1C971E;
+  border-color: #6E726E;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  background-color: #00CA36;
+  background-color: #474746;
 }
 
 .padding-top{
@@ -20,8 +27,19 @@ footer{
 }
 
 .playing{
-	background-color: #FFFED1;
+	background-color: #F5ED35;
 }
+
+.media-ttc{
+	border-radius: 3px;
+}
+
+.media-ttc:hover{
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-color: #EDF7EC;
+	border-radius: 3px;
+}
+
 
 .padding-bottom{
 	padding-bottom: 20px;
@@ -32,7 +50,7 @@ footer{
 }
 
 .padding-right{
-	padding-right: 15px;
+	padding-right: 20px;
 }
 
 .volslider{
