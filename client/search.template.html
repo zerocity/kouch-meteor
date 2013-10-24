@@ -3,7 +3,7 @@
     <div class="padding-right input-group">
       <input id="query" type="text" class="form-control" placeholder="url / search">
       <div class="input-group-btn ">
-        <a class="btn button btn-primary" id="search">Youtube Search <span class="glyphicon glyphicon-play"></span></a>
+        <a class="btn btn-ttc button btn-primary" id="search">Youtube Search <span class="glyphicon glyphicon-play"></span></a>
       </div>
     </div>
 
@@ -17,9 +17,9 @@
           <div class="media-body">
             <h4 class="media-heading">{{title}}</h4>
 
-            <button type="button " class="btn btn-primary addToPlaylist" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-url="{{url}}" data-id="{{youtubeId}}">
-              <span class="glyphicon glyphicon-play"></span>
-              Play
+            <button type="button " class="btn btn-ttc btn-primary addToPlaylist" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-url="{{url}}" data-id="{{youtubeId}}">
+              <span class="glyphicon glyphicon-plus"></span>
+              Add
             {{#if duraction}}
               <span class="glyphicon glyphicon-time"> {{duration}} </span>
             {{/if}}
