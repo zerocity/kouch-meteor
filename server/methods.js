@@ -72,6 +72,9 @@ getParseResults = function(parse,api,sourceUrl){
 }
 
 Meteor.methods({
+  getPlayerState : function(){
+    return playerState
+  },
   getIP : function(){
     //
     return playerState.ip

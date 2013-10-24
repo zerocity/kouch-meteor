@@ -11,8 +11,8 @@ standard-app-packages
 npm
 HTML5-History-API
 page-js-ie-support
-bootstrap-3
 iron-router
 winston-loggly
 winston
 router
+bootstrap-3

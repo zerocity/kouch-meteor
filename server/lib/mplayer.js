@@ -71,6 +71,7 @@ getClose = function(cplayer){
 player = function(playlistId) {
   //highlighting the current played /selected item
   entry = Playlist.findOne(playlistId);
+  console.log(entry);
   logger.info('[ENTRY]',entry.title ,entry._id);
   updateIsPlaying(playlistId);
   playerState.stop = false;
@@ -85,7 +86,7 @@ player = function(playlistId) {
       setState('Play '+ entry.title);   
 
       cplayer.stdin.write('\nosd_show_text "LOADING : '+entry.title+'" 10000 \n');
-
+      // load next / new video
       cplayer.stdin.write('\nloadfile '+entry.url.trim()+'\n');
       playerState.play = true;
 
@@ -108,7 +109,7 @@ player = function(playlistId) {
 
       getData(cplayer);
 
-      cplayer.stdin.write('\nosd_show_text "Play : '+entry.title+'" 10000 \n')
+      osd('Play :' + entry.title);
 
       getError(cplayer);
       getClose(cplayer);

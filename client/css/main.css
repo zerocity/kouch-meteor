@@ -1,3 +1,19 @@
+body{
+	background-color: #000;
+}
+
+footer{
+	padding-left: 5px;	
+}
+
+.btn-ttc,
+.btn-ttc:hover,
+.btn-ttc:active {
+  color: white;
+  border-color: #1C971E;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-color: #00CA36;
+}
 
 .padding-top{
 	padding-top: 5px;
