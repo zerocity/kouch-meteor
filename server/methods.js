@@ -1,4 +1,4 @@
-getParseDataYOUTUBE = function(parse,api){
+getParseData = function(parse,api){
   parse.stdout.on('data', function (data) {
     if (api == 'youtube') {
       result = data.toString()

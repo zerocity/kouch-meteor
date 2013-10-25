@@ -40,7 +40,6 @@ footer{
 	border-radius: 3px;
 }
 
-
 .padding-bottom{
 	padding-bottom: 20px;
 }
@@ -66,4 +65,19 @@ footer{
 
 .container{
 	padding: 5px;
+}
+
+h5.bottom{
+	margin-top: 3px;
+	margin-bottom: 0px;
+}
+
+.navbar-fixed-bottom-ttc{
+	font-family: Calibri,Tahoma,"Lucida Sans Unicode","Lucida Grande",verdana,sans,Arial,geneva,sans-serif;
+	font-size: 14px;
+	font-size: 1.4rem;
+	font-weight: 400;
+	color: #7E7E7E;
+	background: #363636;
+	overflow-x: hidden;
 }
