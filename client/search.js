@@ -45,7 +45,7 @@ Template.search.events({
     var query = $('#query').val();
     Meteor.call('analyse','youtube',this,function (error, result) {
       //console.log(event.toElement);
-      console.log('test',$(event.toElement).addClass("btn-success"));
+      console.log('test',$(event.toElement).toggleClass("btn-ttc btn-success").removeClass("addToPlaylist"));
     })
   }
 });

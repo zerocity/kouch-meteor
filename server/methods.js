@@ -1,6 +1,10 @@
-getParseData = function(parse){
+getParseDataYOUTUBE = function(parse,api){
   parse.stdout.on('data', function (data) {
-    result += data.toString()
+    if (api == 'youtube') {
+      result = data.toString()
+    }else if(api=='api'){
+      result += data.toString()
+    }
   });
 };
 
@@ -246,7 +250,7 @@ Meteor.methods({
         options.push(sourceUrl.toString().trim());
         var parse = cp.spawn('youtube-dl',[options[0],options[1],videoCodexs,options[2]]);
       }
-        getParseData(parse);
+        getParseData(parse,api);
         getParseDataError(parse);
         getParseResults(parse,api,sourceUrl,result)
       }
