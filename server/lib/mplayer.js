@@ -90,7 +90,7 @@ player = function(playlistId) {
       cplayer.stdin.write('\nosd_show_text "LOADING : '+entry.title+'" 10000 \n');
       // load next / new video
       cplayer.stdin.write('\nloadfile '+entry.url.trim()+'\n');
-      cplayer.stdin.write('\nvo_fullscreen 1 \n');
+      cplayer.stdin.write('\nf\n');
 
       playerState.play = true;
 
