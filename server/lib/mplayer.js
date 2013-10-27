@@ -102,7 +102,7 @@ player = function(playlistId) {
     }else{
       logger.info(entry);
       //cplayer = cp.spawn('mplayer ',[entry.url.trim()]); '-cache-min','20' 
-      cplayer = cp.spawn('mplayer',['-idle','-fs','-vo xv',entry.url.trim()]);
+      cplayer = cp.spawn('mplayer',['-idle','-fs','-vo',' xv',entry.url.trim()]);
 /*
       logger.info('[MPLAYER]',entry.date)
       logger.info('[MPLAYER]',entry.date)*/
