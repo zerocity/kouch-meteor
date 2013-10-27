@@ -8,9 +8,9 @@ MODE=`xrandr | grep "$MONITOR_OUTPUT connected" -c`
 if [ "$MODE" == '1' ]
    then
    # external monitor connected
-   xrandr --output MONITOR_OUTPUT --primary && xrandr --output LAPTOP_OUTPUT --off && xrandr --output MONITOR_OUTPUT --auto
+   xrandr --output $MONITOR_OUTPUT --primary && xrandr --output $LAPTOP_OUTPUT --off && xrandr --output $MONITOR_OUTPUT --auto
    else
    # external monitor not connected, default for the laptop's monitor
-   xrandr --output LAPTOP_OUTPUT --auto
+   xrandr --output $LAPTOP_OUTPUT --auto
 fi
 exit
