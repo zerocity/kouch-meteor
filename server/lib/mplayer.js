@@ -3,6 +3,7 @@ osd = function(message){
 };
 
 isStopped = function(data){
+  // give mplayer output console.log(data.toString('utf-8'));
   if (typeof data != "undefined") {
     // TODOD regex 
     if (data.toString('utf-8').trim().split(':').length >= 2 && playerState.stop == false) {
@@ -46,6 +47,7 @@ setNextVideo = function(playlistId){
 
 getError = function(cplayer){
   cplayer.on('error',function(data) {
+    console.log(data);
     logger.error('[PLAYER] error',data);
   });
 };

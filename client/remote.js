@@ -18,7 +18,11 @@ Template.remote.currentVideo = function() {
 
 Template.remote.events({
   'click .toggle-sound' : function(event){
+    console.log('test');
     $('.volslider').toggleClass('hide');
+  },
+  'click .toggle-controller' : function(event){
+    $('.controller').toggleClass('hide');
   },
   'click .backward':function(event){
     Meteor.call('backward');
