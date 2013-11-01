@@ -30,6 +30,8 @@ sudo npm install -g meteorite
 ```bash
 sudo pacman -Sy mplayer
 ```
+for mac os look http://vemod.net/mplayer-in-a-mac-terminal
+
  - [youtube-dl](https://github.com/rg3/youtube-dl)
 ```bash
 sudo pip install youtube-dl
