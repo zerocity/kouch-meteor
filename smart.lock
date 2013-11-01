@@ -10,7 +10,9 @@
       "winston": {},
       "winston-loggly": {},
       "reststop": {},
-      "semantic-ui": {}
+      "semantic-ui": {},
+      "scss": {},
+      "bootstrap3-less": {}
     },
     "packages": {
       "npm": {
@@ -25,8 +27,8 @@
       },
       "bootstrap-3": {
         "git": "https://github.com/mangasocial/meteor-bootstrap-3.git",
-        "tag": "v0.3.4",
-        "commit": "680c056e849d079a1b669247f347da2b443aad91"
+        "tag": "v0.3.5",
+        "commit": "47996f67f3987c9f82117394effcbe1586a4fe29"
       },
       "mini-pages": {
         "git": "https://github.com/cmather/meteor-mini-pages.git",
@@ -35,13 +37,13 @@
       },
       "iron-router": {
         "git": "https://github.com/EventedMind/iron-router.git",
-        "tag": "v0.5.4",
-        "commit": "3e0e22ff85630b7503d0daa1538c6d90abb84020"
+        "tag": "v0.6.1",
+        "commit": "4e1ee0581d68bff422a915dacb0bd30eae10fe08"
       },
       "winston": {
         "git": "https://github.com/tomrogers3/meteor-winston.git",
-        "tag": "v0.0.2",
-        "commit": "3e27e22cc7a9bae7d0a6b4048619cf29d8d0d36b"
+        "tag": "v0.0.3",
+        "commit": "60dc02303ca003ef05254f94fbb9bfd40915d5d3"
       },
       "winston-loggly": {
         "git": "https://github.com/tomrogers3/meteor-winston-loggly.git",
@@ -55,8 +57,18 @@
       },
       "semantic-ui": {
         "git": "https://github.com/nooitaf/meteor-semantic-ui.git",
-        "tag": "v0.0.2",
-        "commit": "9a8c6035ffc34933e30256405d07b3a657595ca7"
+        "tag": "v0.0.4",
+        "commit": "99ae02b1874b520435977e6bc84f140b88f75fc9"
+      },
+      "scss": {
+        "git": "https://github.com/fourseven/meteor-scss.git",
+        "tag": "v0.6.4.1",
+        "commit": "bf203edb83565943cc0c00a31d536de7094f312b"
+      },
+      "bootstrap3-less": {
+        "git": "https://github.com/eprochasson/bootstrap3-less",
+        "tag": "v0.1.4",
+        "commit": "23ec918f8377b15b22cba33e13b717214235c88a"
       },
       "page-js-ie-support": {
         "git": "https://github.com/tmeasday/meteor-page-js-ie-support.git",

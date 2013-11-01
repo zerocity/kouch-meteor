@@ -8,6 +8,8 @@
     "winston": {},
     "winston-loggly": {},
     "reststop": {},
-    "semantic-ui": {}
+    "semantic-ui": {},
+    "scss": {},
+    "bootstrap3-less": {}
   }
 }
