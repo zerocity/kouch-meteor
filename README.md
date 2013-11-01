@@ -9,6 +9,7 @@ What does kouch-meteor ?
 
 Meteor is not officially supported on windows. See [here](https://github.com/oortcloud/meteorite#notes)
 
+ 
 # Installing Dependencies 
 
  - [meteor](https://github.com/meteor/meteor)
@@ -30,7 +31,10 @@ sudo npm install -g meteorite
 ```bash
 sudo pacman -Sy mplayer
 ```
-for mac os look http://vemod.net/mplayer-in-a-mac-terminal
+**for mac osx**
+look http://vemod.net/mplayer-in-a-mac-terminal
+
+set symlink: ln -s /Applications/MPlayer OSX.app/Contents/Resources/External_Binaries/mplayer.app/Contents/MacOS/mplayer /usr/local/bin/mplayer
 
  - [youtube-dl](https://github.com/rg3/youtube-dl)
 ```bash
@@ -52,6 +56,15 @@ git clone https://github.com/zerocity/kouch-meteor.git
 cd kouch-meteor
 mrt
 ```
+
+## Install Kouch
+
+```bash
+git clone https://github.com/zerocity/kouch-meteor.git
+cd kouch-meteor
+mrt
+```
+
  
 ## TODOS
 
