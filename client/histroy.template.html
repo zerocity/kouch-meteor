@@ -1,20 +1,20 @@
 <template name="history">
 
 	<div class="history">
-		<div class="video padding-left padding-top padding-bottomg " style="display: block;">
+		<div class="video">
 			{{#if meteorstatus }}	
 				{{#if list }}	
 					{{#each list}}
 					<div class="media {{#if isPlaying }} playing {{/if}}">
-					  <a class="pull-left" href="#">
-					    <img class="media-object" style="width: 64px; height: 64px;" src="{{thumbnail}}">
+					  <a href="#" class="media-thumbnail">
+					    <img class="media-object" src="{{thumbnail}}">
 					  </a>
 					  <div class="media-body">
-					    <h4 class="media-heading">{{title}}</h4>
-					    <a href="#" class="btn btn-primary btn-xs playStart" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{youtubeId}}">
+					    <h5 class="media-heading">{{title}}</h5>
+					    <a href="#" class="btn btn-primary playStart" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{youtubeId}}">
 					    	<span class="glyphicon glyphicon-play"></span> Play
 					    </a>
-					    <span class="glyphicon glyphicon-time"> {{duration}} </span>
+					    <span class="media-time"><i class="glyphicon glyphicon-time"></i> {{duration}}</span>
 					  </div>
 					</div>
 			  	{{/each}}

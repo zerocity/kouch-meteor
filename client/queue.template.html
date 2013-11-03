@@ -1,33 +1,27 @@
 <template name="queue">
 	<div class="row">
-
-		<div class="video padding-top padding-bottom padding-right" style="display: block;">
+		<div class="video">
 			{{#if getPlaylist }}	
 				{{#each getPlaylist}}
-					<div class="media media-ttc {{#if isPlaying }} playing {{/if}}">
-					  <a class="pull-left" href="#">
-					    <img class="media-object" style="width: 64px; height: 64px;" src="{{thumbnail}}">
-					  </a>
-					  <div class="media-body">
-					    <h4 class="media-heading">{{title}}</h4>
-							<button type="button " class="btn btn-ttc btn-primary playStart" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-url="{{url}}" data-id="{{youtubeId}}">
-								<span class="glyphicon glyphicon-play"></span>
-								play
-							</button>
+				<div class="media media-ttc {{#if isPlaying }} playing {{/if}}">
+					<a class="media-thumbnail" href="#">
+						<img class="media-object" style="width: 100%;" src="{{thumbnail}}">
+					</a>
+					<div class="media-body">
+						<h5 class="media-heading">{{title}}</h5>
+						<button type="button " class="btn btn-ttc btn-primary playStart" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-url="{{url}}" data-id="{{youtubeId}}"><i class="glyphicon glyphicon-play"></i> Play</button>
+						<button type="button " class="btn btn-ttc btn-primary del" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-url="{{url}}" data-id="{{youtubeId}}">
+						<span class="glyphicon glyphicon-remove-circle"></span></button>
 
-							<button type="button " class="btn btn-ttc btn-primary del" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-url="{{url}}" data-id="{{youtubeId}}">
-								<span class="glyphicon glyphicon-trash"></span>
-							</button>
-	
-							{{#if duraction}}
-					    	<span class="glyphicon glyphicon-time"> {{duration}} </span>
- 							{{/if}}
+						{{#if duraction}}
+						<span class="glyphicon glyphicon-time"> {{duration}} </span>
+						{{/if}}
 
-					  </div>
 					</div>
-		  	{{/each}}
-		  {{else}}
-				<p>No Playlist </p>
+				</div>
+				{{/each}}
+			{{else}}
+			<p>No Playlist </p>
 			{{/if}}  
 		</div>		
 	</div>

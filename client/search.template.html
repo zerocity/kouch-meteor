@@ -1,42 +1,44 @@
 <template name="search">
-  <div class="row">
-    <div class="padding-right input-group">
-      <input id="query" type="text" class="form-control" placeholder="url / search">
-      <div class="input-group-btn ">
-        <a class="btn btn-ttc button btn-primary" id="search">Youtube Search <span class="glyphicon glyphicon-play"></span></a>
-      </div>
-    </div>
-
-    <div class="video padding-top padding-bottom" style="display: block;">
-      {{#if searchQueryResults}}  
-        {{#each searchQueryResults}}
-        <div class="media">
-          <a class="pull-left" href="#">
-            <img class="media-object" style="width: 64px; height: 64px;" src="{{thumbnail}}">
-          </a>
-          <div class="media-body">
-            <h4 class="media-heading">{{title}}</h4>
-
-            <button type="button " class="btn btn-ttc btn-primary addToPlaylist" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-url="{{url}}" data-id="{{youtubeId}}">
-              <span class="glyphicon glyphicon-plus"></span>
-              Add
-            {{#if duraction}}
-              <span class="glyphicon glyphicon-time"> {{duration}} </span>
-            {{/if}}
-            </button>
-
-<!--             <a href="#" class="btn button btn-primary addToPlaylist" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{youtubeId}}"><span class="glyphicon glyphicon-plus"></span>
-            </a>
-            {{#if duraction}}
-              <span class="glyphicon glyphicon-time"> {{duration}} </span>
-            {{/if}} -->
-          </div>
+  <div class="container">
+    <div class="row">
+      <div class="input-group">
+        <input id="query" type="text" class="form-control" placeholder="url / search">
+        <div class="input-group-btn ">
+          <a class="btn btn-ttc button btn-primary" id="search">Youtube Search <i class="glyphicon glyphicon-play"></i></a>
         </div>
-        {{/each}}
-      {{else}}
+      </div>
 
-      {{/if}}
-          <!-- ### Results will be append here ###  -->
-    </div>
-  </div>  
+      <div class="video padding-top padding-bottom" style="display: block;">
+        {{#if searchQueryResults}}  
+          {{#each searchQueryResults}}
+          <div class="media">
+            <a class="pull-left" href="#">
+              <img class="media-object" style="width: 64px; height: 64px;" src="{{thumbnail}}">
+            </a>
+            <div class="media-body">
+              <h4 class="media-heading">{{title}}</h4>
+
+              <button type="button " class="btn btn-ttc btn-primary addToPlaylist" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-url="{{url}}" data-id="{{youtubeId}}">
+                <i class="glyphicon glyphicon-plus"></i>
+                Add
+              {{#if duraction}}
+                <i class="glyphicon glyphicon-time"> {{duration}} </i>
+              {{/if}}
+              </button>
+
+  <!--             <a href="#" class="btn button btn-primary addToPlaylist" data-title="{{title}}" data-thumbnail="{{thumbnail}}" data-id="{{youtubeId}}"><span class="glyphicon glyphicon-plus"></span>
+              </a>
+              {{#if duraction}}
+                <span class="glyphicon glyphicon-time"> {{duration}} </span>
+              {{/if}} -->
+            </div>
+          </div>
+          {{/each}}
+        {{else}}
+
+        {{/if}}
+            <!-- ### Results will be append here ###  -->
+      </div>
+    </div>  
+  </div>
 </template>

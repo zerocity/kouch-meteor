@@ -1,68 +1,59 @@
 <template name="remote">
 
-  {{#if currentVideo}}
-   
-    <div class="row">
-
-      <div class="row padding-left">
-        <div class="col-xs-2 col-md-2">
-          <img style="width: 50px; height: 50px;"  src="{{currentVideo.thumbnail}}">  
-        </div>
-        <div class="col-xs-6">
-          <h5 class="bottom">{{currentVideo.title}} {{#if currentVideo.duraction}} <span class="glyphicon glyphicon-time">{{currentVideo.duration}}</span> {{/if}} </h5>
-        </div>
-        <div class="col-xs-2 padding-top">
-            <button class="btn btn-ttc button remote toggle-controller" >
-              <span class="glyphicon glyphicon glyphicon-expand"></span>
-            </button>          
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="controller padding-left padding-bottom hide">        
-          <div class="col-xs-offset-2 col-md-offset-1 col-xs-12">      
-            <div class="btn-group">
-              <button btn-ttc class="btn btn-ttc button btn-default remote backward">
-                <span class="glyphicon glyphicon-fast-backward"></span>
-              </button>
-              <button class="btn btn-ttc button btn-default remote left">
-                <span class="glyphicon glyphicon-backward"> </span>
-              </button>
-              <button class="btn btn-ttc button btn-default remote pause">
-                {{#if playerState.play}} 
-                &nbsp;<span class="glyphicon glyphicon-pause"></span>&nbsp;
-                {{else}}
-                &nbsp;<span class="glyphicon glyphicon-play"></span>&nbsp;
-                {{/if}}
-              </button>
-              <button class="btn btn-ttc button btn-default remote stop">
-                <span class="glyphicon glyphicon-stop"></span>
-              </button>
-              <button class="btn btn-ttc button btn-default remote right">
-                <span class="glyphicon glyphicon-forward"> </span>
-              </button>
-              <button class="btn btn-ttc button btn-default remote forward">
-                <span class="glyphicon glyphicon-fast-forward"></span>
-              </button>
-              <button class="btn button remote {{#if playerState.queue}} btn-success {{else}} btn-ttc {{/if}}  queueMode">
-                <span class="glyphicon glyphicon-retweet"></span>
-              </button>
-
-              <button class="btn btn-ttc button btn-default remote toggle-sound">
-                <span class="glyphicon glyphicon-volume-up"> </span>
-              </button>
-                
-            </div> 
-          </div> 
-          <div class="col-xs-offset-2 col-md-offset-1 col-xs-10 col-md-10 padding-left">
-            <div class="volslider hide"> 
-              <input class= "progress pull-right" type="range" name="slider" id="slider" value="{{playerState.volume}}" min="0" max="100"  />
+{{#if currentVideo}}
+    <div class="container">
+        <div class="row">
+            <div class="media media-remote">
+                <div class="media-thumbnail">
+                    <img class="media-object" src="{{currentVideo.thumbnail}}">  
+                </div>
+                <div class="media-body">
+                    <h5 class="media-heading">{{currentVideo.title}} {{#if currentVideo.duraction}} <i class="glyphicon glyphicon-time">{{currentVideo.duration}}</i> {{/if}} </h5>
+                    <div>
+                        <button class="btn btn-primary btn-ttc button remote toggle-controller" ><i class="glyphicon glyphicon glyphicon-expand"></i></button>          
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>  
-      </div>
+        </div>
 
+
+        <div class="controller hide">        
+            <div>      
+                <div class="btn-group">
+                    <button btn-ttc class="btn btn-ttc button btn-default remote backward"><i class="glyphicon glyphicon-fast-backward"></i></button>
+                    <button class="btn btn-ttc button btn-default remote left"><i class="glyphicon glyphicon-backward"> </i></button>
+                    <button class="btn btn-ttc button btn-default remote pause">
+                          {{#if playerState.play}} 
+                          &nbsp;<i class="glyphicon glyphicon-pause"></i>&nbsp;
+                          {{else}}
+                          &nbsp;<i class="glyphicon glyphicon-play"></i>&nbsp;
+                          {{/if}}
+                    </button>
+                    <button class="btn btn-ttc button btn-default remote stop">
+                          <i class="glyphicon glyphicon-stop"></i>
+                    </button>
+                    <button class="btn btn-ttc button btn-default remote right">
+                          <i class="glyphicon glyphicon-forward"> </i>
+                    </button>
+                    <button class="btn btn-ttc button btn-default remote forward">
+                          <i class="glyphicon glyphicon-fast-forward"></i>
+                    </button>
+                    <button class="btn button remote {{#if playerState.queue}} btn-success {{else}} btn-ttc {{/if}}  queueMode">
+                          <i class="glyphicon glyphicon-retweet"></i>
+                    </button>
+
+                    <button class="btn btn-ttc button btn-default remote toggle-sound">
+                          <i class="glyphicon glyphicon-volume-up"> </i>
+                    </button>
+                </div> 
+            </div> 
+            <div>
+                <div class="volslider hide"> 
+                    <input class= "progress pull-right" type="range" name="slider" id="slider" value="{{playerState.volume}}" min="0" max="100"  />
+                </div>
+            </div>
+        </div>  
     </div>
-  {{/if}}
+{{/if}}
 
 </template>

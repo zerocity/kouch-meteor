@@ -1,0 +1,98 @@
+@import "/packages/bootstrap3-less/bootstrap.lessimport";
+@import "/client/css/themes/default.less";
+
+@grid-gutter-width:         20px;
+
+body {
+	background: #111;
+	padding: 70px 0;
+}
+
+header {
+
+	.navbar-default {
+		background: @gray-darker;
+		border-bottom: none;
+
+		.navbar-brand {
+			color: @brand-primary;
+			&:hover {
+				color: lighten(@brand-primary, 10%);
+			}
+		}
+
+		#main-nav {
+			float: left;
+			padding: 0;
+			margin: 0;
+
+			li {
+				float: left;
+				list-style: none;
+				padding: 0;
+				margin: 0;
+
+				a {
+					color: #fff;
+					display: block;
+					padding: 15px;
+
+					&:hover {
+						text-decoration: none;
+						background: darken(@gray-darker, 2%);
+					}
+				}
+			}
+		}
+	}
+}
+
+.media {
+	padding: 20px 0;
+	margin: 0;
+	background-image: -webkit-gradient(linear, left 0%, left 100%, from(#111), to(#000));
+	
+	.media-thumbnail {
+		.make-xs-column(3);
+	}
+
+	.media-object {
+		width: 100%;
+	}
+
+	.media-body {
+		.make-xs-column(9);
+
+		h5 {
+			color: @gray-light;
+			margin-bottom: 10px;
+		}
+
+		.media-time {
+			display: inline-block;
+			margin-left: 20px;
+		}
+	}
+}
+
+.media-remote {
+	background: #fff;
+
+	.media-body {
+		h5	{
+			color: @gray;
+		}
+	}
+}
+
+.controller-container {
+	background: #eee;
+	.controller {
+		text-align: center;
+		margin: 10px 0;
+	} 
+}
+
+footer {
+	padding: 10px 0;
+}
