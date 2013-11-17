@@ -35,7 +35,7 @@ for (var dev in ifaces) {
   ifaces[dev].forEach(function(details){
     if (details.family=='IPv4') {
       console.log(dev+(alias?':'+alias:''),details.address);
-      if (dev == 'eth0' || dev == 'wlan0'){
+      if (dev == 'eth0' || dev == 'wlan0' || dev =="enp9s0"){
         playerState.ip = details.address+':3000';
         console.log('kouch on: ',details.address);
       }
